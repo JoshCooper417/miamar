@@ -4,12 +4,12 @@ html(lang="en")
     title= pageTitle
     script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js')
     script(src='//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js')
-    script(src='/js/helloworld.js')
     script(src='http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js')
+    script(src='http://documentcloud.github.com/underscore/underscore-min.js')
   body
     |<div id="fb-root"></div>
     script(src='/js/fb.js').
-    h1 Jade - node template engine
+    h1 מי אמר אל מי?
     div#binder
         button(data-bind="click:FBLogin") Log in
         a(href="/quiz", data-bind="visible: fLoggedIn") Play Game
