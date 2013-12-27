@@ -13,7 +13,7 @@ html(lang="en")
     div#binder
      div(data-bind="visible: !fGameOver()")
         p(data-bind="visible: fLoading") loading...
-        p Score: 
+        p(data-bind="visible:fInit") Score: 
             span(data-bind="text: nScore")
         button(data-bind="click:DoStuff,visible:!fInit()||fGameOver()") Play the game!
         p(data-bind="visible: fLinkShowing") Who put a link with the following description? 
