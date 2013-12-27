@@ -11,5 +11,5 @@ html(lang="en")
     script(src='/js/fb.js').
     h1 מי אמר אל מי?
     div#binder
-        button(data-bind="click:FBLogin") Log in
+        button(data-bind="click:FBLogin,visible: !fLoggedIn()") Log in
         a(href="/quiz", data-bind="visible: fLoggedIn") Play Game

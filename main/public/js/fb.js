@@ -30,6 +30,7 @@ window.fbAsyncInit = function() {
 
 var FBKoModel = function(){
     var self = this;
+    self.fLoading = ko.observable(false);
     self.fLoggedIn = ko.observable(false);
     self.fStatusShowing = ko.observable(false);
     self.fLinkShowing = ko.observable(false);
@@ -59,7 +60,9 @@ var FBKoModel = function(){
     }
 
     self.DoStuff=function(){
+	self.fLoading(true);
 	FB.api('/me/home', function(response) {
+	    self.fLoading(false);
 	    self.fInit(true);
 	    self.items = response.data;
 	    self.ask(self.i);

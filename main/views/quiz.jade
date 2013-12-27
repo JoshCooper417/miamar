@@ -12,6 +12,7 @@ html(lang="en")
     h1 מי אמר אל מי?
     div#binder
      div(data-bind="visible: !fGameOver()")
+        p(data-bind="visible: fLoading") loading...
         p Score: 
             span(data-bind="text: nScore")
         button(data-bind="click:DoStuff,visible:!fInit()||fGameOver()") Play the game!
