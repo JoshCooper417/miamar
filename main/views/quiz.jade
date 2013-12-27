@@ -1,0 +1,31 @@
+doctype html
+html(lang="en")
+  head
+    title= pageTitle
+    script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js')
+    script(src='//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js')
+    script(src='http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js')
+    script(src='http://documentcloud.github.com/underscore/underscore-min.js')
+  body
+    |<div id="fb-root"></div>
+    script(src='/js/fb.js').
+    h1 מי אמר אל מי?
+    div#binder
+     div(data-bind="visible: !fGameOver()")
+        p Score: 
+            span(data-bind="text: nScore")
+        button(data-bind="click:DoStuff,visible:!fInit()||fGameOver()") Play the game!
+        p(data-bind="visible: fLinkShowing") Who put a link with the following description? 
+            span(data-bind="text: sMessage")
+        p(data-bind="visible: fStatusShowing") Who posted the following status 
+            span(data-bind="text: sMessage")
+        form(data-bind="submit: checkName, visible: fStatusShowing() || fLinkShowing()")
+            input(data-bind="value: sInputName")
+        p(data-bind="visible:fSeeNext")
+            span(data-bind="visible: fCorrect") Correct!
+            span(data-bind="visible: !fCorrect()") Wrong :(
+        button(data-bind="click:seeNext,visible:fSeeNext") Next
+     div(data-bind="visible: fGameOver")
+         p GAME OVER
+         p Your score was: 
+            span(data-bind="text: nScore")
