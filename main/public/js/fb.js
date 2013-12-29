@@ -1,4 +1,5 @@
 var OPTIONS_LENGTH = 12;
+var NUM_QUESTIONS = 10;
 
 window.fbAsyncInit = function() {
     // init the FB JS SDK
@@ -30,7 +31,7 @@ window.fbAsyncInit = function() {
     firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
 }());
 
-var FQL1 = "SELECT type, source_id, message FROM stream WHERE type < 81 AND source_id IN (SELECT uid2 FROM friend WHERE uid1 = me())";
+var FQL1 = "SELECT type, source_id, message FROM stream WHERE type < 81 AND source_id IN (SELECT uid2 FROM friend WHERE uid1 = me()) LIMIT 100";
 var FQL2 = "SELECT name, uid FROM user WHERE uid IN (SELECT source_id FROM #query1)";
 
 var FBKoModel = function(){
@@ -48,7 +49,8 @@ var FBKoModel = function(){
     self.sMessage = ko.observable();
     self.sActualName = ko.observable();
     self.nScore = ko.observable(0);
-    self.items;
+    self.items = new Array();
+    self.allItems;
     self.i=0;
     self.allFriends = new Array();
     self.friendOptions = ko.observableArray();
@@ -74,13 +76,24 @@ var FBKoModel = function(){
 	FB.api({method: 'fql.multiquery', queries: {query1: FQL1, query2: FQL2}}, function(response) {
 	    self.fLoading(false);
 	    self.fInit(true);
-	    self.items = response[0].fql_result_set;
+	    // filter out items with empty messages
+	    self.allItems = _.filter(response[0].fql_result_set, function(item){return item.message;});
+	    self.generateItemsList();
 	    _.each(response[1].fql_result_set, function(friend){
 		self.friendsMap[friend.uid] = friend.name;
 	    });
 	    self.ask(self.i);
 	});
     }
+
+
+    self.generateItemsList = function(){
+	_.shuffle(self.allItems);
+	for (var i=0; i<NUM_QUESTIONS;i++){
+	    self.items[i] = self.allItems[i];
+	}
+    }
+
 
     self.startGame=function(){
 	self.fLoading(true);
