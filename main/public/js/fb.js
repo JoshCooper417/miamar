@@ -30,6 +30,9 @@ window.fbAsyncInit = function() {
     firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
 }());
 
+var FQL1 = "SELECT type, source_id, message FROM stream WHERE type < 81 AND source_id IN (SELECT uid2 FROM friend WHERE uid1 = me())";
+var FQL2 = "SELECT name, uid FROM user WHERE uid IN (SELECT source_id FROM #query1)";
+
 var FBKoModel = function(){
     var self = this;
     self.fLoading = ko.observable(false);
@@ -49,6 +52,7 @@ var FBKoModel = function(){
     self.i=0;
     self.allFriends = new Array();
     self.friendOptions = ko.observableArray();
+    self.friendsMap = {};
     
     self.fQuestionShowing = ko.computed(function(){
 	return self.fStatusShowing() || self.fLinkShowing();
@@ -66,10 +70,14 @@ var FBKoModel = function(){
     }
 
     self.gatherQuestions = function(){
-	FB.api('/me/home', function(response) {
+//	FB.api('/me/home', function(response) {
+	FB.api({method: 'fql.multiquery', queries: {query1: FQL1, query2: FQL2}}, function(response) {
 	    self.fLoading(false);
 	    self.fInit(true);
-	    self.items = response.data;
+	    self.items = response[0].fql_result_set;
+	    _.each(response[1].fql_result_set, function(friend){
+		self.friendsMap[friend.uid] = friend.name;
+	    });
 	    self.ask(self.i);
 	});
     }
@@ -107,20 +115,20 @@ var FBKoModel = function(){
 	}
 	var item = self.items[self.i];
 	var type = item.type;
-	self.sActualName(item.from.name);
+	self.sActualName(self.friendsMap[item.source_id]);
 	self.generateFriendOptions();
 
-	if(type === 'status'){
+	if(type === '56' || type === '46'){
 	    if(item.story){
 		self.terminate();
 		return;
 	    }
-	    self.sMessage('\n\n'+item.message);
+	    self.sMessage(item.message);
 	    self.fStatusShowing(true);
 	}
-	else if (type === 'link'){
+	else if (type === '80'){
 	    var message = item.message || item.description;
-	    self.sMessage('\n\n'+message);
+	    self.sMessage(message);
 	    self.fLinkShowing(true);
 	}
 	else{
