@@ -66,11 +66,11 @@ var FBKoModel = function(){
 	    } else {
 		console.log('User cancelled login or did not fully authorize.');
 	    }
-	}, {scope: 'email,read_stream'});
+	}, {scope: 'email,read_stream,read_insights'});
     }
 
     self.gatherQuestions = function(){
-//	FB.api('/me/home', function(response) {
+	//	FB.api('/me/home', function(response) {
 	FB.api({method: 'fql.multiquery', queries: {query1: FQL1, query2: FQL2}}, function(response) {
 	    self.fLoading(false);
 	    self.fInit(true);
@@ -98,13 +98,12 @@ var FBKoModel = function(){
 	self.friendOptions.removeAll();
 	while(self.friendOptions().length < OPTIONS_LENGTH){
 	    var friend = self.allFriends[parseInt(Math.random() * self.allFriends.length)];
-	var name = friend.name;
+	    var name = friend.name;
 	    if(self.friendOptions().indexOf(name) === -1){
 		self.friendOptions().push(name);
 	    }
 	}
-	var correctIndex = parseInt(Math.random() * self.friendOptions().length);
-	self.friendOptions.splice(correctIndex, 0, self.sActualName());
+	self.friendOptions.push(self.sActualName());
 	self.friendOptions.sort();
     }
 
