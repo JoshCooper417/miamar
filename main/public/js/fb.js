@@ -1,3 +1,5 @@
+var OPTIONS_LENGTH = 12;
+
 window.fbAsyncInit = function() {
     // init the FB JS SDK
     FB.init({
@@ -34,16 +36,23 @@ var FBKoModel = function(){
     self.fLoggedIn = ko.observable(false);
     self.fStatusShowing = ko.observable(false);
     self.fLinkShowing = ko.observable(false);
-    self.sInputName = ko.observable();
-    self.sMessage = ko.observable();
-    self.sActualName = '';
-    self.nScore = ko.observable(0);
-    self.fInit = ko.observable(false);
     self.fSeeNext = ko.observable(false);
     self.fCorrect = ko.observable();
+    self.fGameOver = ko.observable(false);
+    self.fInit = ko.observable(false);
+
+    self.sInputName = ko.observable();
+    self.sMessage = ko.observable();
+    self.sActualName = ko.observable();
+    self.nScore = ko.observable(0);
     self.items;
     self.i=0;
-    self.fGameOver = ko.observable(false);
+    self.allFriends = new Array();
+    self.friendOptions = ko.observableArray();
+    
+    self.fQuestionShowing = ko.computed(function(){
+	return self.fStatusShowing() || self.fLinkShowing();
+    });
 
     self.FBLogin=function(){
 	FB.login(function(response) {
@@ -53,20 +62,46 @@ var FBKoModel = function(){
 		    console.log('Good to see you, ' + response.name + '.');
 		});
 		self.fLoggedIn(true);
+		self.startGame();
 	    } else {
 		console.log('User cancelled login or did not fully authorize.');
 	    }
 	}, {scope: 'email,read_stream'});
     }
 
-    self.DoStuff=function(){
-	self.fLoading(true);
+    self.gatherQuestions = function(){
 	FB.api('/me/home', function(response) {
 	    self.fLoading(false);
 	    self.fInit(true);
 	    self.items = response.data;
 	    self.ask(self.i);
 	});
+    }
+
+    self.startGame=function(){
+	self.fLoading(true);
+	if (!self.allFriends.length){
+	    FB.api('/me/friends', function(friends) {
+		self.allFriends = friends.data;
+		self.gatherQuestions();
+	    });
+	} else{
+	    self.gatherQuestions();
+	}
+    }
+
+    self.generateFriendOptions = function(){
+	self.friendOptions.removeAll();
+	while(self.friendOptions().length < OPTIONS_LENGTH){
+	    var friend = self.allFriends[parseInt(Math.random() * self.allFriends.length)];
+	var name = friend.name;
+	    if(self.friendOptions().indexOf(name) === -1){
+		self.friendOptions().push(name);
+	    }
+	}
+	var correctIndex = parseInt(Math.random() * self.friendOptions().length);
+	self.friendOptions.splice(correctIndex, 0, self.sActualName());
+	self.friendOptions.sort();
     }
 
     self.ask = function(){
@@ -76,7 +111,9 @@ var FBKoModel = function(){
 	}
 	var item = self.items[self.i];
 	var type = item.type;
-	self.sActualName = item.from.name;
+	self.sActualName(item.from.name);
+	self.generateFriendOptions();
+
 	if(type === 'status'){
 	    if(item.story){
 		self.terminate();
@@ -94,21 +131,23 @@ var FBKoModel = function(){
 	    self.terminate();
 	}
     }
+
     self.terminate = function(){
-	    self.i++;
-	    self.ask(self.i);
+	self.i++;
+	self.ask(self.i);
     }
+
     self.checkName = function(){
+	self.fLinkShowing(false);
+	self.fStatusShowing(false);
 	self.fSeeNext(true);
-	if(self.sInputName().toLowerCase() === self.sActualName.toLowerCase()){
+	if(self.sInputName().toLowerCase() === self.sActualName().toLowerCase()){
 	    self.nScore(self.nScore()+1);
 	    self.fCorrect(true);
 	}
 	else{
 	    self.fCorrect(false);
 	}
-	self.fLinkShowing(false);
-	self.fStatusShowing(false);
 	self.sInputName('');
     }
     self.seeNext = function(){

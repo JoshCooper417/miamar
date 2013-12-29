@@ -11,21 +11,25 @@ html(lang="en")
     script(src='/js/fb.js').
     h1 מי אמר אל מי?
     div#binder
-     div(data-bind="visible: !fGameOver()")
-        p(data-bind="visible: fLoading") loading...
-        p(data-bind="visible:fInit") Score: 
+     button(data-bind="click:FBLogin, visible: !fLoggedIn()") Log in
+     div(data-bind="visible: fLoggedIn")
+        p Score: 
             span(data-bind="text: nScore")
-        button(data-bind="click:DoStuff,visible:!fLoading()&&!fInit()||fGameOver()") Play the game!
+        p(data-bind="visible: fLoading") loading...
+        button(data-bind="click:startGame, visible: !fInit() && !fLoading()") Play the game!
         p(data-bind="visible: fLinkShowing") Who put a link with the following description? 
-            span(data-bind="text: sMessage")
-        p(data-bind="visible: fStatusShowing") Who posted the following status 
-            span(data-bind="text: sMessage")
-        form(data-bind="submit: checkName, visible: fStatusShowing() || fLinkShowing()")
-            input(data-bind="value: sInputName")
-        p(data-bind="visible:fSeeNext")
-            span(data-bind="visible: fCorrect") Correct!
-            span(data-bind="visible: !fCorrect()") Wrong :(
-        button(data-bind="click:seeNext,visible:fSeeNext") Next
+        p(data-bind="visible: fStatusShowing") Who posted the following status: 
+        p(data-bind="visible: fQuestionShowing, text: sMessage")
+        div(data-bind="foreach: friendOptions, visible: fQuestionShowing")
+           div
+               input(name="friends",type="radio", data-bind="value:$data,checked:$parent.sInputName")
+               span(data-bind="text:$data")
+        button(data-bind="visible: fQuestionShowing, click: checkName") Submit
+        div(data-bind="visible:fSeeNext")
+            p(data-bind="visible: fCorrect") Correct!
+            p(data-bind="visible: !fCorrect()") Wrong :( The correct answer was: 
+                span(data-bind="text: sActualName")
+            button(data-bind="click:seeNext") Next
      div(data-bind="visible: fGameOver")
          p GAME OVER
          p Your score was: 

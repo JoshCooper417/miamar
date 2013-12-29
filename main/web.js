@@ -13,12 +13,7 @@ app.use(logfmt.requestLogger());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req, res) {
-    res.render('login', { message: 'created'})
-});
-
-app.get('/quiz',function(req,res){
-    console.log('QUIZ');
-    res.render('quiz', { message: 'quizzing'})
+    res.render('quiz', { message: 'created'})
 });
 
 var port = process.env.PORT || 5000;
