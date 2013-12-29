@@ -1,4 +1,4 @@
-var OPTIONS_LENGTH = 12;
+var OPTIONS_LENGTH = 5;
 var NUM_QUESTIONS = 10;
 
 window.fbAsyncInit = function() {
