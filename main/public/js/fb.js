@@ -1,5 +1,5 @@
 var OPTIONS_LENGTH = 5;
-var NUM_QUESTIONS = 10;
+var NUM_QUESTIONS = 8;
 
 window.fbAsyncInit = function() {
     // init the FB JS SDK
@@ -51,7 +51,7 @@ var FBKoModel = function(){
     self.nScore = ko.observable(0);
     self.items = new Array();
     self.allItems;
-    self.i=0;
+    self.idxCurrItem=0;
     self.allFriends = new Array();
     self.friendOptions = ko.observableArray();
     self.friendsMap = {};
@@ -82,13 +82,13 @@ var FBKoModel = function(){
 	    _.each(response[1].fql_result_set, function(friend){
 		self.friendsMap[friend.uid] = friend.name;
 	    });
-	    self.ask(self.i);
+	    self.ask(self.idxCurrItem);
 	});
     }
 
 
     self.generateItemsList = function(){
-	_.shuffle(self.allItems);
+	self.allItems = _.shuffle(self.allItems);
 	for (var i=0; i<NUM_QUESTIONS;i++){
 	    self.items[i] = self.allItems[i];
 	}
@@ -96,6 +96,9 @@ var FBKoModel = function(){
 
 
     self.startGame=function(){
+	self.idxCurrItem = 0;
+	self.nScore(0);
+	self.fGameOver(false);
 	self.fLoading(true);
 	if (!self.allFriends.length){
 	    FB.api('/me/friends', function(friends) {
@@ -121,11 +124,11 @@ var FBKoModel = function(){
     }
 
     self.ask = function(){
-	if(self.i == self.items.length){
+	if(self.idxCurrItem == self.items.length){
 	    self.fGameOver(true);
 	    return;
 	}
-	var item = self.items[self.i];
+	var item = self.items[self.idxCurrItem];
 	var type = item.type;
 	self.sActualName(self.friendsMap[item.source_id]);
 	self.generateFriendOptions();
@@ -149,8 +152,8 @@ var FBKoModel = function(){
     }
 
     self.terminate = function(){
-	self.i++;
-	self.ask(self.i);
+	self.idxCurrItem++;
+	self.ask(self.idxCurrItem);
     }
 
     self.checkName = function(){
