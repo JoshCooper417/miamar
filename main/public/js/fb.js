@@ -1,5 +1,5 @@
 var OPTIONS_LENGTH = 5;
-var NUM_QUESTIONS = 2;
+var NUM_QUESTIONS = 7;
 
 window.fbAsyncInit = function() {
     // init the FB JS SDK
@@ -60,43 +60,20 @@ var FBKoModel = function(){
 	return self.fStatusShowing() || self.fLinkShowing();
     });
 
+    self.checkIfLoggedIn = function(){
+	FB.getLoginStatus(function(response) {
+	    self.fLoggedIn(response.status === 'connected');
+	});
+    }
+
     self.FBLogin=function(){
 	FB.login(function(response) {
 	    if (response.authResponse) {
 		self.fLoggedIn(true);
-		self.startGame();
 	    } else {
 		console.log('User cancelled login or did not fully authorize.');
 	    }
 	}, {scope: 'email,read_stream'});
-    }
-
-    self.gatherQuestions = function(){
-	if(self.allItems){
-	    self.begin();
-	} else {
-	    FB.api({method: 'fql.multiquery', queries: {query1: FQL1, query2: FQL2}}, function(response) {
-		// filter out items with empty messages
-		self.allItems = _.filter(response[0].fql_result_set, function(item){return item.message;});
-		_.each(response[1].fql_result_set, function(friend){
-		    self.friendsMap[friend.uid] = friend.name;
-		});
-		self.begin();
-	    });}
-    }
-
-    self.begin = function(){
-	self.fLoading(false);
-	self.fInit(true);
-	self.generateItemsList();
-	self.ask(self.idxCurrItem);
-    }
-
-    self.generateItemsList = function(){
-	self.allItems = _.shuffle(self.allItems);
-	for (var i=0; i<NUM_QUESTIONS;i++){
-	    self.items[i] = self.allItems[i];
-	}
     }
 
 
@@ -108,11 +85,36 @@ var FBKoModel = function(){
 	if (!self.allFriends.length){
 	    FB.api('/me/friends', function(friends) {
 		self.allFriends = friends.data;
-		self.gatherQuestions();
+		self.gatherItemsFromAPI();
 	    });
 	} else{
-	    self.gatherQuestions();
+	    self.gatherItemsFromAPI();
 	}
+    }
+
+    // When the user hits 'Play Game!'
+    self.gatherItemsFromAPI = function(){
+	if(self.allItems){
+	    self.initQuestions();
+	} else {
+	    FB.api({method: 'fql.multiquery', queries: {query1: FQL1, query2: FQL2}}, function(response) {
+		// filter out items with empty messages
+		self.allItems = _.filter(response[0].fql_result_set, function(item){return item.message;});
+		_.each(response[1].fql_result_set, function(friend){
+		    self.friendsMap[friend.uid] = friend.name;
+		});
+		self.initQuestions();
+	    });}
+    }
+
+    self.initQuestions = function(){
+	self.fLoading(false);
+	self.fInit(true);
+	self.allItems = _.shuffle(self.allItems);
+	for (var i=0; i<NUM_QUESTIONS;i++){
+	    self.items[i] = self.allItems[i];
+	}
+	self.ask(self.idxCurrItem);
     }
 
     self.generateFriendOptions = function(){
@@ -140,7 +142,7 @@ var FBKoModel = function(){
 
 	if(type === '56' || type === '46'){
 	    if(item.story){
-		self.terminate();
+		self.nextQuestion();
 		return;
 	    }
 	    self.sMessage(item.message);
@@ -152,11 +154,11 @@ var FBKoModel = function(){
 	    self.fLinkShowing(true);
 	}
 	else{
-	    self.terminate();
+	    self.nextQuestion();
 	}
     }
 
-    self.terminate = function(){
+    self.nextQuestion = function(){
 	self.idxCurrItem++;
 	self.ask(self.idxCurrItem);
     }
@@ -174,14 +176,17 @@ var FBKoModel = function(){
 	}
 	self.sInputName('');
     }
+
+    // When the user presses the button to see the next question
     self.seeNext = function(){
 	self.fSeeNext(false);
-	self.terminate();
+	self.nextQuestion();
     }
 }
 
 
 $(window).load(function(){
     var FBModel = new FBKoModel();
+    FBModel.checkIfLoggedIn();
     ko.applyBindings(FBModel, $('#binder')[0]);
 });
