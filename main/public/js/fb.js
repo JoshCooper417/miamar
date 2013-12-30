@@ -68,7 +68,7 @@ var FBKoModel = function(){
 	    } else {
 		console.log('User cancelled login or did not fully authorize.');
 	    }
-	}, {scope: 'email,read_stream,read_insights'});
+	}, {scope: 'email,read_stream'});
     }
 
     self.gatherQuestions = function(){
