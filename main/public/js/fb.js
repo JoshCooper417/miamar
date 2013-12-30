@@ -1,5 +1,5 @@
 var OPTIONS_LENGTH = 5;
-var NUM_QUESTIONS = 8;
+var NUM_QUESTIONS = 2;
 
 window.fbAsyncInit = function() {
     // init the FB JS SDK
@@ -72,20 +72,25 @@ var FBKoModel = function(){
     }
 
     self.gatherQuestions = function(){
-	//	FB.api('/me/home', function(response) {
-	FB.api({method: 'fql.multiquery', queries: {query1: FQL1, query2: FQL2}}, function(response) {
-	    self.fLoading(false);
-	    self.fInit(true);
-	    // filter out items with empty messages
-	    self.allItems = _.filter(response[0].fql_result_set, function(item){return item.message;});
-	    self.generateItemsList();
-	    _.each(response[1].fql_result_set, function(friend){
-		self.friendsMap[friend.uid] = friend.name;
-	    });
-	    self.ask(self.idxCurrItem);
-	});
+	if(self.allItems){
+	    self.begin();
+	} else {
+	    FB.api({method: 'fql.multiquery', queries: {query1: FQL1, query2: FQL2}}, function(response) {
+		// filter out items with empty messages
+		self.allItems = _.filter(response[0].fql_result_set, function(item){return item.message;});
+		_.each(response[1].fql_result_set, function(friend){
+		    self.friendsMap[friend.uid] = friend.name;
+		});
+		self.begin();
+	    });}
     }
 
+    self.begin = function(){
+	self.fLoading(false);
+	self.fInit(true);
+	self.generateItemsList();
+	self.ask(self.idxCurrItem);
+    }
 
     self.generateItemsList = function(){
 	self.allItems = _.shuffle(self.allItems);
