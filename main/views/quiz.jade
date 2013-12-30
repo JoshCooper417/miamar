@@ -7,8 +7,9 @@ html(lang="en")
     script(src='http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js')
     script(src='http://documentcloud.github.com/underscore/underscore-min.js')
   body
+    noscript Sorry, you need JavaScript for this to work (i.e., this is not made for mobile).
     |<div id="fb-root"></div>
-    script(src='/js/fb.js').
+    script(src='/js/fb.js')
     h1 מי אמר אל מי?
     div#binder
      button(data-bind="click:FBLogin, visible: !fLoggedIn()") Log in
