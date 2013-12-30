@@ -73,7 +73,7 @@ var FBKoModel = function(){
 	    } else {
 		console.log('User cancelled login or did not fully authorize.');
 	    }
-	}, {scope: 'email,read_stream'});
+	}, {scope: 'email,read_stream,publish_actions'});
     }
 
 
