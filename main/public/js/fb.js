@@ -1,5 +1,5 @@
 var OPTIONS_LENGTH = 5;
-var NUM_QUESTIONS = 2;
+var NUM_QUESTIONS = 10;
 
 window.fbAsyncInit = function() {
     // init the FB JS SDK
@@ -31,8 +31,9 @@ window.fbAsyncInit = function() {
     firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
 }());
 
-var FQL1 = "SELECT type, source_id, message FROM stream WHERE type < 81 AND source_id IN (SELECT uid2 FROM friend WHERE uid1 = me()) LIMIT 100";
-var FQL2 = "SELECT name, uid FROM user WHERE uid IN (SELECT source_id FROM #query1)";
+var FQL1 = "SELECT type, actor_id, message FROM stream WHERE type < 81 AND source_id IN "
+		+ "(SELECT uid2 FROM friend WHERE uid1 = me()) LIMIT 70";
+var FQL2 = "SELECT name, uid FROM user WHERE uid IN (SELECT actor_id FROM #query1)";
 
 var FBKoModel = function(){
     var self = this;
@@ -138,7 +139,7 @@ var FBKoModel = function(){
 	}
 	var item = self.items[self.idxCurrItem];
 	var type = item.type;
-	self.sActualName(self.friendsMap[item.source_id]);
+	self.sActualName(self.friendsMap[item.actor_id]);
 	self.generateFriendOptions();
 
 	if(type === '56' || type === '46'){
