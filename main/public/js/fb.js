@@ -1,5 +1,5 @@
 var OPTIONS_LENGTH = 5;
-var NUM_QUESTIONS = 7;
+var NUM_QUESTIONS = 2;
 
 window.fbAsyncInit = function() {
     // init the FB JS SDK
@@ -55,6 +55,7 @@ var FBKoModel = function(){
     self.allFriends = new Array();
     self.friendOptions = ko.observableArray();
     self.friendsMap = {};
+    self.numQuestions = ko.observable(NUM_QUESTIONS);
     
     self.fQuestionShowing = ko.computed(function(){
 	return self.fStatusShowing() || self.fLinkShowing();
@@ -111,7 +112,7 @@ var FBKoModel = function(){
 	self.fLoading(false);
 	self.fInit(true);
 	self.allItems = _.shuffle(self.allItems);
-	for (var i=0; i<NUM_QUESTIONS;i++){
+	for (var i=0; i<self.numQuestions();i++){
 	    self.items[i] = self.allItems[i];
 	}
 	self.ask(self.idxCurrItem);
