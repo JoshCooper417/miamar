@@ -9,6 +9,10 @@ window.fbAsyncInit = function() {
 	xfbml      : true                                  // Look for social plugins on the page
     });
 
+    var FBModel = new FBKoModel();
+    FBModel.checkIfLoggedIn();
+    ko.applyBindings(FBModel, $('#binder')[0]);
+
     // Additional initialization code such as adding Event Listeners goes here
 };
 
@@ -185,10 +189,3 @@ var FBKoModel = function(){
 	self.nextQuestion();
     }
 }
-
-
-$(window).load(function(){
-    var FBModel = new FBKoModel();
-    FBModel.checkIfLoggedIn();
-    ko.applyBindings(FBModel, $('#binder')[0]);
-});
