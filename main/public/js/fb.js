@@ -32,10 +32,11 @@ window.fbAsyncInit = function() {
     firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
 }());
 
-var FQL1 = "SELECT type, actor_id, message FROM stream WHERE type < 81 AND source_id IN "
-    + "(SELECT uid2 FROM friend WHERE uid1 = me()) LIMIT 120";
 var FQL_FRIENDS = "SELECT name, uid FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())";
 var FQL_PICS = "SELECT id, url FROM profile_pic WHERE id IN (SELECT uid from #query1) AND width = 200 AND height = 200";
+
+var FQL_STATUS1 = "SELECT uid,message FROM status WHERE uid = ";
+var FQL_STATUS2 = " LIMIT 1";
 
 var FBKoModel = function(){
     var self = this;
@@ -56,7 +57,6 @@ var FBKoModel = function(){
     self.sActualName = ko.observable();
     self.nScore = ko.observable(0);
     self.items = new Array();
-    self.allItems;
     self.idxCurrItem=0;
     self.allFriends = new Array();
     self.friendOptions = ko.observableArray();
@@ -91,45 +91,58 @@ var FBKoModel = function(){
 	self.fScorePosted(false);
 	self.fGameOver(false);
 	self.fLoading(true);
-	if(self.allItems){
-		self.initQuestions();
+	if(self.allFriends.length){
+	     self.gatherItems();
 	}
 	else{
-		self.gatherItemsFromAPI();	
+	    self.collectFriends();	
 	}
     }
 
     // When the user hits 'Play Game!'
-    self.gatherItemsFromAPI = function(){
-	var query_params = {query0: FQL1, query1: FQL_FRIENDS, query2: FQL_PICS};
-	    FB.api({method: 'fql.multiquery', queries: query_params}, function(response) {
-		// filter out items with empty messages
-		self.allItems = _.filter(response[0].fql_result_set, function(item){
-		    if(item.message){
-			// Get rid of anything that has Birthday or birthday or any other -irthday in there
-			return item.message.indexOf('irthday') === -1
-		    }
-		    return false;
-		});
-		self.allFriends = response[1].fql_result_set;
-		_.each(response[1].fql_result_set, function(friend){
-		    self.friendsMap[friend.uid] = friend;
-		});
-		// Add pic urls
-		_.each(response[2].fql_result_set, function(pic){
-		    self.friendsMap[pic.id].pic_square = pic.url;
-		});
-		self.initQuestions();
+    self.collectFriends = function(){
+	var query_params = {query1: FQL_FRIENDS, query2: FQL_PICS};
+	FB.api({method: 'fql.multiquery', queries: query_params}, function(response) {
+	    self.allFriends = response[0].fql_result_set;
+	    _.each(response[0].fql_result_set, function(friend){
+		self.friendsMap[friend.uid] = friend;
 	    });
+	    // Add pic urls
+	    _.each(response[1].fql_result_set, function(pic){
+		self.friendsMap[pic.id].pic_square = pic.url;
+	    });
+	    self.gatherItems();
+	});
     }
 
-    self.initQuestions = function(){
+    self.gatherItems = function(){
+	var friendIDs = new Array();
+	for (var i=0; i<OPTIONS_LENGTH * 2;i++){
+	    friendIDs[i] = self.allFriends[parseInt(Math.random() * self.allFriends.length)].uid;
+	}
+	var params = {};
+	for (var i=0; i<friendIDs.length;i++){
+	    var queryID = 'query'+i;
+	    var query = FQL_STATUS1 + friendIDs[i] + FQL_STATUS2;
+	    params[queryID] = query;
+	}
+	FB.api({method: 'fql.multiquery', queries: params}, function(response){
+	    var good_responses = _.filter(response,function(r){
+		return r.fql_result_set.length;
+	    });
+	    for (var i=0; i<Math.min(OPTIONS_LENGTH,good_responses.length);i++){
+		var message_obj = {};
+		message_obj['id'] = good_responses[i].fql_result_set[0].uid;
+		message_obj['message'] = good_responses[i].fql_result_set[0].message;
+		self.items[i] = message_obj;
+	    }
+	    self.askFirstQuestion();
+	});
+    }
+
+    self.askFirstQuestion = function(){
 	self.fLoading(false);
 	self.fInit(true);
-	self.allItems = _.shuffle(self.allItems);
-	for (var i=0; i<self.numQuestions();i++){
-	    self.items[i] = self.allItems[i];
-	}
 	self.ask(self.idxCurrItem);
     }
 
@@ -139,40 +152,25 @@ var FBKoModel = function(){
 	    return;
 	}
 	var item = self.items[self.idxCurrItem];
-	var type = item.type;
-	self.oActualFriend = self.friendsMap[item.actor_id]
+	self.oActualFriend = self.friendsMap[item.id]
 	self.sActualName(self.oActualFriend.name);
-	debugger;
 	self.generateFriendOptions();
-
-	if(type === '56' || type === '46'){
-	    if(item.story){
-		self.nextQuestion();
-		return;
-	    }
-	    self.sMessage(item.message);
-	    self.fStatusShowing(true);
-	}
-	else if (type === '80'){
-	    var message = item.message || item.description;
-	    self.sMessage(message);
-	    self.fLinkShowing(true);
-	}
-	else{
-	    self.nextQuestion();
-	}
+	self.sMessage(item.message);
+	self.fStatusShowing(true);
     }
 
     self.generateFriendOptions = function(){
 	self.friendOptions.removeAll();
 	while(self.friendOptions().length < OPTIONS_LENGTH){
 	    var friendObj = self.allFriends[parseInt(Math.random() * self.allFriends.length)];
-	    if(self.friendOptions().indexOf(friendObj.name) === -1){
+	    if(self.friendOptions().indexOf(friendObj.name) === -1 && friendObj.name != self.oActualFriend.name){
 		self.friendOptions().push(friendObj);
 	    }
 	}
 	self.friendOptions.push(self.oActualFriend);
-	self.friendOptions.sort();
+	self.friendOptions.sort(function(a,b){
+	    return a.name - b.name;
+	});
     }
 
     self.nextQuestion = function(){
