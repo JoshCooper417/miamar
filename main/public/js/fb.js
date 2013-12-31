@@ -1,5 +1,6 @@
 var OPTIONS_LENGTH = 5;
 var NUM_QUESTIONS = 7;
+var FBModel;
 
 window.fbAsyncInit = function() {
     // init the FB JS SDK
@@ -9,9 +10,7 @@ window.fbAsyncInit = function() {
 	xfbml      : true                                  // Look for social plugins on the page
     });
 
-    var FBModel = new FBKoModel();
     FBModel.checkIfLoggedIn();
-    ko.applyBindings(FBModel, $('#binder')[0]);
 };
 
 // Load the SDK asynchronously
@@ -41,6 +40,7 @@ var FQL_PICS = "SELECT id, url FROM profile_pic WHERE id IN (SELECT uid from #qu
 var FBKoModel = function(){
     var self = this;
     self.fLoading = ko.observable(false);
+    self.fCheckedIfLoggedIn = ko.observable(false);
     self.fLoggedIn = ko.observable(false);
     self.fStatusShowing = ko.observable(false);
     self.fLinkShowing = ko.observable(false);
@@ -69,6 +69,7 @@ var FBKoModel = function(){
 
     self.checkIfLoggedIn = function(){
 	FB.getLoginStatus(function(response) {
+	    self.fCheckedIfLoggedIn(true);
 	    self.fLoggedIn(response.status === 'connected');
 	});
     }
@@ -212,3 +213,8 @@ var FBKoModel = function(){
 	});
     }
 }
+
+$(window).ready(function(){
+    FBModel = new FBKoModel();
+    ko.applyBindings(FBModel, $('#binder')[0]);
+});

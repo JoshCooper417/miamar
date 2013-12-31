@@ -17,13 +17,13 @@ html(lang="en")
     
     
     
-     img(class="login",src="images/fbconnect.png" data-bind="click:FBLogin, visible: !fLoggedIn()")
+     img(class="login",src="images/fbconnect.png" data-bind="click:FBLogin, visible: !fLoggedIn() && fCheckedIfLoggedIn()")
      
      div(data-bind="visible: fLoggedIn")
         p(class="score") Score: 
             span(data-bind="text: nScore")
         p(data-bind="visible: fLoading") loading...
-        button(class="play", data-bind="click:startGame, visible: !fInit() && !fLoading()") Play the game!
+        button(class="play", data-bind="click:startGame, visible: !fInit()") Play the game!
         p(data-bind="visible: fLinkShowing") Who put a link with the following description? 
         p(data-bind="visible: fStatusShowing") Who posted the following status: 
         p(data-bind="visible: fQuestionShowing, text: sMessage")
