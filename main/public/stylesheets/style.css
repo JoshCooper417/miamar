@@ -1,12 +1,14 @@
 p {
 	font-size:100px;
 	color:#bbb;
+	font-family: 'Vollkorn', serif;
 }
 
 h1 {
-	color:#f60000;
 	font-family: "Helvetica Neue";
 	text-align: center;
+	font-family: 'Lato', sans-serif;
+	font-weight: 900;
 }
 
 .score {
