@@ -35,7 +35,7 @@ window.fbAsyncInit = function() {
 
 var FQL1 = "SELECT type, actor_id, message FROM stream WHERE type < 81 AND source_id IN "
     + "(SELECT uid2 FROM friend WHERE uid1 = me()) LIMIT 120";
-var FQL_FRIENDS = "SELECT name, uid, pic FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())";
+var FQL_FRIENDS = "SELECT name, uid, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())";
 
 var FBKoModel = function(){
     var self = this;
@@ -109,13 +109,9 @@ var FBKoModel = function(){
 		    }
 		    return false;
 		});
+		self.allFriends = response[1].fql_result_set;
 		_.each(response[1].fql_result_set, function(friend){
-			self.allFriends = response[1].fql_result_set;
-			var friendObj = {
-				name: friend.name,
-				pic: friend.pic
-			}
-		    self.friendsMap[friend.uid] = friendObj;
+		    self.friendsMap[friend.uid] = friend;
 		});
 		self.initQuestions();
 	    });
@@ -140,6 +136,7 @@ var FBKoModel = function(){
 	var type = item.type;
 	self.oActualFriend = self.friendsMap[item.actor_id]
 	self.sActualName(self.oActualFriend.name);
+	debugger;
 	self.generateFriendOptions();
 
 	if(type === '56' || type === '46'){
