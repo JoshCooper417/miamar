@@ -1,5 +1,5 @@
 var OPTIONS_LENGTH = 5;
-var NUM_QUESTIONS = 3;
+var NUM_QUESTIONS = 7;
 
 window.fbAsyncInit = function() {
     // init the FB JS SDK
@@ -35,7 +35,7 @@ window.fbAsyncInit = function() {
 
 var FQL1 = "SELECT type, actor_id, message FROM stream WHERE type < 81 AND source_id IN "
     + "(SELECT uid2 FROM friend WHERE uid1 = me()) LIMIT 120";
-var FQL2 = "SELECT name, uid FROM user WHERE uid IN (SELECT actor_id FROM #query1)";
+var FQL_FRIENDS = "SELECT name, uid, pic FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())";
 
 var FBKoModel = function(){
     var self = this;
@@ -51,6 +51,7 @@ var FBKoModel = function(){
 
     self.sInputName = ko.observable();
     self.sMessage = ko.observable();
+    self.oActualFriend;
     self.sActualName = ko.observable();
     self.nScore = ko.observable(0);
     self.items = new Array();
@@ -88,22 +89,18 @@ var FBKoModel = function(){
 	self.fScorePosted(false);
 	self.fGameOver(false);
 	self.fLoading(true);
-	if (!self.allFriends.length){
-	    FB.api('/me/friends', function(friends) {
-		self.allFriends = friends.data;
-		self.gatherItemsFromAPI();
-	    });
-	} else{
-	    self.gatherItemsFromAPI();
+	if(self.allItems){
+		self.initQuestions();
+	}
+	else{
+		self.gatherItemsFromAPI();	
 	}
     }
 
     // When the user hits 'Play Game!'
     self.gatherItemsFromAPI = function(){
-	if(self.allItems){
-	    self.initQuestions();
-	} else {
-	    FB.api({method: 'fql.multiquery', queries: {query1: FQL1, query2: FQL2}}, function(response) {
+		var query_params = {query0: FQL1, query1: FQL_FRIENDS};
+	    FB.api({method: 'fql.multiquery', queries: query_params}, function(response) {
 		// filter out items with empty messages
 		self.allItems = _.filter(response[0].fql_result_set, function(item){
 		    if(item.message){
@@ -113,10 +110,15 @@ var FBKoModel = function(){
 		    return false;
 		});
 		_.each(response[1].fql_result_set, function(friend){
-		    self.friendsMap[friend.uid] = friend.name;
+			self.allFriends = response[1].fql_result_set;
+			var friendObj = {
+				name: friend.name,
+				pic: friend.pic
+			}
+		    self.friendsMap[friend.uid] = friendObj;
 		});
 		self.initQuestions();
-	    });}
+	    });
     }
 
     self.initQuestions = function(){
@@ -129,19 +131,6 @@ var FBKoModel = function(){
 	self.ask(self.idxCurrItem);
     }
 
-    self.generateFriendOptions = function(){
-	self.friendOptions.removeAll();
-	while(self.friendOptions().length < OPTIONS_LENGTH){
-	    var friend = self.allFriends[parseInt(Math.random() * self.allFriends.length)];
-	    var name = friend.name;
-	    if(self.friendOptions().indexOf(name) === -1){
-		self.friendOptions().push(name);
-	    }
-	}
-	self.friendOptions.push(self.sActualName());
-	self.friendOptions.sort();
-    }
-
     self.ask = function(){
 	if(self.idxCurrItem == self.items.length){
 	    self.fGameOver(true);
@@ -149,7 +138,8 @@ var FBKoModel = function(){
 	}
 	var item = self.items[self.idxCurrItem];
 	var type = item.type;
-	self.sActualName(self.friendsMap[item.actor_id]);
+	self.oActualFriend = self.friendsMap[item.actor_id]
+	self.sActualName(self.oActualFriend.name);
 	self.generateFriendOptions();
 
 	if(type === '56' || type === '46'){
@@ -168,6 +158,18 @@ var FBKoModel = function(){
 	else{
 	    self.nextQuestion();
 	}
+    }
+
+    self.generateFriendOptions = function(){
+	self.friendOptions.removeAll();
+	while(self.friendOptions().length < OPTIONS_LENGTH){
+	    var friendObj = self.allFriends[parseInt(Math.random() * self.allFriends.length)];
+	    if(self.friendOptions().indexOf(friendObj.name) === -1){
+		self.friendOptions().push(friendObj);
+	    }
+	}
+	self.friendOptions.push(self.oActualFriend);
+	self.friendOptions.sort();
     }
 
     self.nextQuestion = function(){
