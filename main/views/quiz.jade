@@ -14,22 +14,26 @@ html(lang="en")
     noscript Sorry, you need JavaScript for this to work (i.e., this is not made for mobile).
     |<div id="fb-root"></div>
     script(src='/js/fb.js')
-    h1 SAYS WHO
-    h2 How well do you know your friends?
+    
+    
+              
+    
     div#binder
     
-    
+     div(class="heading",data-bind="visible:fInit() || fLoading()")
+         span(class="titleSmall") SAYS WHO
+             span(class="score") SCORE: 
+                 span(data-bind="text: nScore")
+     h1(data-bind="visible:!(fInit() || fLoading())") SAYS WHO
+     h2(data-bind="visible:!(fInit() || fLoading())") How well do you know your friends?
     
      img(class="login",src="images/fbconnect.png" data-bind="click:FBLogin, visible: !fLoggedIn() && fCheckedIfLoggedIn()")
      
      div(data-bind="visible: fLoggedIn")
-        p(class="score") Score: 
-            span(data-bind="text: nScore")
-        p(data-bind="visible: fLoading") loading...
-        button(class="play", data-bind="click:startGame, visible: !fInit() && !fLoading()") Play the game!
-        p(data-bind="visible: fLinkShowing") Who put a link with the following description? 
-        p(data-bind="visible: fStatusShowing") Who posted the following status: 
-        p(data-bind="visible: fQuestionShowing, text: sMessage")
+        p(class="quote", data-bind="visible: fLoading") loading...
+        button(class="play", data-bind="click:startGame, visible: !fInit() && !fLoading()") PLAY
+        div(class="quoteContainer",data-bind="visible: fQuestionShowing")
+            p(class="quote", data-bind="text: sMessage")
         div(data-bind="foreach: friendOptions, visible: fQuestionShowing")
            div
                input(name="friends",type="radio", data-bind="value:$data.name,checked:$parent.sInputName")
