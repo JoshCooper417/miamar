@@ -35,7 +35,8 @@ window.fbAsyncInit = function() {
 
 var FQL1 = "SELECT type, actor_id, message FROM stream WHERE type < 81 AND source_id IN "
     + "(SELECT uid2 FROM friend WHERE uid1 = me()) LIMIT 120";
-var FQL_FRIENDS = "SELECT name, uid, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())";
+var FQL_FRIENDS = "SELECT name, uid FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())";
+var FQL_PICS = "SELECT id, url FROM profile_pic WHERE id IN (SELECT uid from #query1) AND width = 200 AND height = 200";
 
 var FBKoModel = function(){
     var self = this;
@@ -99,7 +100,7 @@ var FBKoModel = function(){
 
     // When the user hits 'Play Game!'
     self.gatherItemsFromAPI = function(){
-		var query_params = {query0: FQL1, query1: FQL_FRIENDS};
+	var query_params = {query0: FQL1, query1: FQL_FRIENDS, query2: FQL_PICS};
 	    FB.api({method: 'fql.multiquery', queries: query_params}, function(response) {
 		// filter out items with empty messages
 		self.allItems = _.filter(response[0].fql_result_set, function(item){
@@ -112,6 +113,10 @@ var FBKoModel = function(){
 		self.allFriends = response[1].fql_result_set;
 		_.each(response[1].fql_result_set, function(friend){
 		    self.friendsMap[friend.uid] = friend;
+		});
+		// Add pic urls
+		_.each(response[2].fql_result_set, function(pic){
+		    self.friendsMap[pic.id].pic_square = pic.url;
 		});
 		self.initQuestions();
 	    });
