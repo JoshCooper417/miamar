@@ -1,0 +1,27 @@
+p {
+	font-size:100px;
+	color:#bbb;
+}
+
+h1 {
+	color:#f60000;
+	font-family: "Helvetica Neue";
+	text-align: center;
+}
+
+.score {
+	font-size:12px;
+	text-align: center;
+}
+
+.play {
+	text-align: center;
+	color:#1b00ff;
+}
+
+.login {
+	background:url(/images/fbconnect.png) no-repeat;
+	width:100%;
+	height:100%;
+	border:none;
+}
