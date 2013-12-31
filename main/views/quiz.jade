@@ -17,7 +17,7 @@ html(lang="en")
     
     
     
-     button(class="login", data-bind="click:FBLogin, visible: !fLoggedIn()") Log in
+     img(class="login",src="images/fbconnect.png" data-bind="click:FBLogin, visible: !fLoggedIn()")
      
      div(data-bind="visible: fLoggedIn")
         p(class="score") Score: 
