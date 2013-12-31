@@ -37,4 +37,5 @@ html(lang="en")
             span(data-bind="text: nScore")
             span  out of 
             span(data-bind="text: numQuestions")
+         button(data-bind="click:postScore,visible:!fScorePosted()") Post your score!
          button(data-bind="click:startGame") Play again!

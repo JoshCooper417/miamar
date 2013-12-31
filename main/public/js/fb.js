@@ -1,5 +1,5 @@
 var OPTIONS_LENGTH = 5;
-var NUM_QUESTIONS = 10;
+var NUM_QUESTIONS = 3;
 
 window.fbAsyncInit = function() {
     // init the FB JS SDK
@@ -12,8 +12,6 @@ window.fbAsyncInit = function() {
     var FBModel = new FBKoModel();
     FBModel.checkIfLoggedIn();
     ko.applyBindings(FBModel, $('#binder')[0]);
-
-    // Additional initialization code such as adding Event Listeners goes here
 };
 
 // Load the SDK asynchronously
@@ -49,6 +47,7 @@ var FBKoModel = function(){
     self.fCorrect = ko.observable();
     self.fGameOver = ko.observable(false);
     self.fInit = ko.observable(false);
+    self.fScorePosted = ko.observable(false);
 
     self.sInputName = ko.observable();
     self.sMessage = ko.observable();
@@ -86,6 +85,7 @@ var FBKoModel = function(){
     self.startGame=function(){
 	self.idxCurrItem = 0;
 	self.nScore(0);
+	self.fScorePosted(false);
 	self.fGameOver(false);
 	self.fLoading(true);
 	if (!self.allFriends.length){
@@ -193,5 +193,18 @@ var FBKoModel = function(){
     self.seeNext = function(){
 	self.fSeeNext(false);
 	self.nextQuestion();
+    }
+
+    self.postScore = function(){
+    	var postMessage = 'I scored a '+self.nScore()+'! Give it a try too!';
+		var params = {message: postMessage};
+		FB.api("me/feed", 'post', params, function(response) {
+		   if (!response || response.error){
+		   	console.log(response.error.message);
+		   }
+		   else{
+		   	self.fScorePosted(true);
+		   }
+		});
     }
 }
