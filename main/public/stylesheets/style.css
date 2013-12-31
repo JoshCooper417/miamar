@@ -1,14 +1,28 @@
+body {
+	background-color: #ff604b;
+}
+
 p {
 	font-size:100px;
-	color:#bbb;
+	color:#FFF;
 	font-family: 'Vollkorn', serif;
 }
 
 h1 {
-	font-family: "Helvetica Neue";
 	text-align: center;
 	font-family: 'Lato', sans-serif;
 	font-weight: 900;
+	font-size: 200px;
+}
+
+h2 {
+	text-align: center;
+	font-family: 'Vollkorn', serif;
+	font-weight: 400;
+	font-style: italic;
+	color:#FFF;
+	font-size: 50px;
+	margin-top: -80px;
 }
 
 .score {
