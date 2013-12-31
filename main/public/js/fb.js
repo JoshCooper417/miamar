@@ -36,7 +36,7 @@ window.fbAsyncInit = function() {
 }());
 
 var FQL1 = "SELECT type, actor_id, message FROM stream WHERE type < 81 AND source_id IN "
-		+ "(SELECT uid2 FROM friend WHERE uid1 = me()) LIMIT 70";
+		+ "(SELECT uid2 FROM friend WHERE uid1 = me()) LIMIT 120";
 var FQL2 = "SELECT name, uid FROM user WHERE uid IN (SELECT actor_id FROM #query1)";
 
 var FBKoModel = function(){
@@ -105,7 +105,13 @@ var FBKoModel = function(){
 	} else {
 	    FB.api({method: 'fql.multiquery', queries: {query1: FQL1, query2: FQL2}}, function(response) {
 		// filter out items with empty messages
-		self.allItems = _.filter(response[0].fql_result_set, function(item){return item.message;});
+		self.allItems = _.filter(response[0].fql_result_set, function(item){
+			if(item.message){
+				// Get rid of anything that has Birthday or birthday or any other -irthday in there
+				return item.message.indexOf('irthday') === -1
+			}
+			return false;
+		});
 		_.each(response[1].fql_result_set, function(friend){
 		    self.friendsMap[friend.uid] = friend.name;
 		});
