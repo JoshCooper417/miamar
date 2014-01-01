@@ -7,7 +7,6 @@ body {
 .quoteContainer {
 	height:300px;
 	overflow:none;
-	background-color: blue;
 }
 
 .quote, p {
@@ -76,4 +75,17 @@ h2 {
 	font-size: 30px;
 	color:white;
 }
+
+.choices {
+	margin:0 auto;
+	text-align: center;
+}
+
+.profpic:hover{
+  box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  -webkit-box-sizing:border-box;
+  border:10px solid red;
+}
+    
 
