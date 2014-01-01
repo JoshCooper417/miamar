@@ -27,11 +27,12 @@ html(lang="en")
 				
 				img(class="login",src="images/fbconnect.png" data-bind="click:FBLogin, visible: !fLoggedIn() && fCheckedIfLoggedIn()")
 				
-				div(data-bind="visible: fLoggedIn")
 				p(class="quote", data-bind="visible: fLoading") loading...
-				button(class="play", data-bind="click:startGame, visible: !fInit() && !fLoading()") PLAY
-				div(class="quoteContainer",data-bind="visible: fQuestionShowing")
-					p(class="quote", data-bind="text: sMessage")
+
+				div(data-bind="visible: fLoggedIn() && !fGameOver() && !fLoading()")
+					button(class="play", data-bind="click:startGame, visible: !fInit() && !fLoading()") PLAY
+					div(class="quoteContainer",data-bind="visible: fQuestionShowing")
+						p(class="quote", data-bind="text: sMessage")
 				
 				//correct
 				div(data-bind="visible: fLoggedIn")
@@ -44,8 +45,6 @@ html(lang="en")
 					p GAME OVER
 					p Your score was 
 						span(data-bind="text: nScore")
-						span	 out of 
-						span(data-bind="text: numQuestions")
 					button(data-bind="click:postScore,visible:!fScorePosted()") Post your score!
 					button(data-bind="click:startGame") Play again!
 				div(class="push")
