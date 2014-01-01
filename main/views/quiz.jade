@@ -37,7 +37,7 @@ html(lang="en")
         div(data-bind="foreach: friendOptions, visible: fQuestionShowing")
            div
                span(data-bind="text:$data.name")
-               img(data-bind="click: $parent.checkName, attr:{src: $data.pic_square}")
+               img(data-bind="click:$parent.checkName, attr:{src: $data.pic_square}")
         button(data-bind="visible: fQuestionShowing, click: checkName") Submit
         div(data-bind="visible:fSeeNext")
             p(data-bind="visible: fCorrect") Correct!
