@@ -1,5 +1,6 @@
 var OPTIONS_LENGTH = 5;
-var NUM_QUESTIONS = 7;
+var NUM_QUESTIONS = 10;
+var NUM_CHANCES = 3;
 var FBModel;
 
 window.fbAsyncInit = function() {
@@ -43,8 +44,7 @@ var FBKoModel = function(){
     self.fLoading = ko.observable(false);
     self.fCheckedIfLoggedIn = ko.observable(false);
     self.fLoggedIn = ko.observable(false);
-    self.fStatusShowing = ko.observable(false);
-    self.fLinkShowing = ko.observable(false);
+    self.fQuestionShowing = ko.observable(false);
     self.fSeeNext = ko.observable(false);
     self.fCorrect = ko.observable();
     self.fGameOver = ko.observable(false);
@@ -55,16 +55,13 @@ var FBKoModel = function(){
     self.oActualFriend;
     self.sActualName = ko.observable();
     self.nScore = ko.observable(0);
+    self.nIncorrect = ko.observable(0);
     self.items = new Array();
     self.idxCurrItem=0;
     self.allFriends = new Array();
     self.friendOptions = ko.observableArray();
     self.friendsMap = {};
     self.numQuestions = ko.observable(NUM_QUESTIONS);
-    
-    self.fQuestionShowing = ko.computed(function(){
-	return self.fStatusShowing() || self.fLinkShowing();
-    });
 
     self.checkIfLoggedIn = function(){
 	FB.getLoginStatus(function(response) {
@@ -86,9 +83,11 @@ var FBKoModel = function(){
 
     self.startGame=function(){
 	self.idxCurrItem = 0;
+	self.nIncorrect(0);
 	self.nScore(0);
 	self.fScorePosted(false);
 	self.fGameOver(false);
+	self.fSeeNext(false);
 	self.fLoading(true);
 	if(self.allFriends.length){
 	     self.gatherItems();
@@ -116,7 +115,7 @@ var FBKoModel = function(){
 
     self.gatherItems = function(){
 	var friendIDs = new Array();
-	for (var i=0; i<OPTIONS_LENGTH * 2;i++){
+	for (var i=0; i<OPTIONS_LENGTH;i++){
 	    friendIDs[i] = self.allFriends[parseInt(Math.random() * self.allFriends.length)].uid;
 	}
 	var params = {};
@@ -127,9 +126,12 @@ var FBKoModel = function(){
 	}
 	FB.api({method: 'fql.multiquery', queries: params}, function(response){
 	    var good_responses = _.filter(response,function(r){
-		return r.fql_result_set.length;
+		if(r.fql_result_set.length){
+		    return r.fql_result_set[0].message;
+		};
+		return false;
 	    });
-	    for (var i=0; i<Math.min(OPTIONS_LENGTH,good_responses.length);i++){
+	    for (var i=0; i<good_responses.length; i++){
 		var message_obj = {};
 		message_obj['id'] = good_responses[i].fql_result_set[0].uid;
 		message_obj['message'] = good_responses[i].fql_result_set[0].message;
@@ -147,15 +149,17 @@ var FBKoModel = function(){
 
     self.ask = function(){
 	if(self.idxCurrItem == self.items.length){
-	    self.fGameOver(true);
-	    return;
+	    self.idxCurrItem = 0;
+	    self.fLoading(true);
+	    self.gatherItems();
+	} else {
+	    var item = self.items[self.idxCurrItem];
+	    self.oActualFriend = self.friendsMap[item.id]
+	    self.sActualName(self.oActualFriend.name);
+	    self.generateFriendOptions();
+	    self.sMessage(item.message);
+	    self.fQuestionShowing(true);
 	}
-	var item = self.items[self.idxCurrItem];
-	self.oActualFriend = self.friendsMap[item.id]
-	self.sActualName(self.oActualFriend.name);
-	self.generateFriendOptions();
-	self.sMessage(item.message);
-	self.fStatusShowing(true);
     }
 
     self.generateFriendOptions = function(){
@@ -170,7 +174,6 @@ var FBKoModel = function(){
 	    }
 	}
 	self.friendOptions.push(self.oActualFriend);
-	debugger;
 	self.friendOptions.sort(function(left, right){ 
 	    return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) 
 	})
@@ -183,15 +186,18 @@ var FBKoModel = function(){
 
     self.checkName = function(data){
 	var sInputName = data.name;
-	self.fLinkShowing(false);
-	self.fStatusShowing(false);
+	self.fQuestionShowing(false);
 	self.fSeeNext(true);
 	if(sInputName.toLowerCase() === self.sActualName().toLowerCase()){
 	    self.nScore(self.nScore()+1);
 	    self.fCorrect(true);
 	}
 	else{
+	    self.nIncorrect(self.nIncorrect()+1);
 	    self.fCorrect(false);
+	    if(self.nIncorrect() >= NUM_CHANCES){
+		self.fGameOver(true);
+	    }
 	};
     }
 
