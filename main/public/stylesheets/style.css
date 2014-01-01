@@ -1,3 +1,7 @@
+html, body {
+	height: 100%;
+}
+
 body {
 	background-color: #ff604b;
 	padding:0;
@@ -10,11 +14,11 @@ body {
 }
 
 .quote, p {
-	font-size:40px;
+	font-size:60px;
 	color:#FFF;
 	font-family: 'Vollkorn', serif;
 	text-align: center;
-	line-height: 50px;	
+	line-height: 70px;	
 }
 
 h1 {
@@ -81,11 +85,19 @@ h2 {
 	text-align: center;
 }
 
+.profpic {
+	width:16.666666667%;
+}
+
 .profpic:hover{
   box-sizing:border-box;
   -moz-box-sizing:border-box;
   -webkit-box-sizing:border-box;
-  border:10px solid red;
+  border:10px solid white;
 }
     
-
+.footer, .push {
+	position:fixed;
+	bottom:0;
+	width:100%;
+}
