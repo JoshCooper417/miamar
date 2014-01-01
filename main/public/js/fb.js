@@ -162,7 +162,7 @@ var FBKoModel = function(){
 	self.friendOptions.removeAll();
 	while(self.friendOptions().length < OPTIONS_LENGTH){
 	    var friendObj = self.allFriends[parseInt(Math.random() * self.allFriends.length)];
-	    if(self.friendOptions().indexOf(friendObj.name) === -1 && friendObj.name != self.oActualFriend.name){
+	    if(self.friendOptions().indexOf(friendObj.name) === -1 && friendObj.name != self.sActualName()){
 		self.friendOptions().push(friendObj);
 	    }
 	}
