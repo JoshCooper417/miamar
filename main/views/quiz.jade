@@ -34,11 +34,9 @@ html(lang="en")
         button(class="play", data-bind="click:startGame, visible: !fInit() && !fLoading()") PLAY
         div(class="quoteContainer",data-bind="visible: fQuestionShowing")
             p(class="quote", data-bind="text: sMessage")
-        div(data-bind="foreach: friendOptions, visible: fQuestionShowing")
-           div
-               span(data-bind="text:$data.name")
-               img(data-bind="click:$parent.checkName, attr:{src: $data.pic_square}")
-        button(data-bind="visible: fQuestionShowing, click: checkName") Submit
+        div(class="choices", data-bind="foreach: friendOptions, visible: fQuestionShowing")
+           //span(data-bind="text:$data.name")
+           img(class="profpic", data-bind="click:$parent.checkName, attr:{src: $data.pic_square}")
         div(data-bind="visible:fSeeNext")
             p(data-bind="visible: fCorrect") Correct!
             p(data-bind="visible: !fCorrect()") Wrong :( The correct answer was: 
