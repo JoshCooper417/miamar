@@ -51,7 +51,6 @@ var FBKoModel = function(){
     self.fInit = ko.observable(false);
     self.fScorePosted = ko.observable(false);
 
-    self.sInputName = ko.observable();
     self.sMessage = ko.observable();
     self.oActualFriend;
     self.sActualName = ko.observable();
@@ -178,18 +177,18 @@ var FBKoModel = function(){
 	self.ask(self.idxCurrItem);
     }
 
-    self.checkName = function(){
+    self.checkName = function(data){
+	var sInputName = data.name;
 	self.fLinkShowing(false);
 	self.fStatusShowing(false);
 	self.fSeeNext(true);
-	if(self.sInputName().toLowerCase() === self.sActualName().toLowerCase()){
+	if(sInputName.toLowerCase() === self.sActualName().toLowerCase()){
 	    self.nScore(self.nScore()+1);
 	    self.fCorrect(true);
 	}
 	else{
 	    self.fCorrect(false);
-	}
-	self.sInputName('');
+	};
     }
 
     // When the user presses the button to see the next question
