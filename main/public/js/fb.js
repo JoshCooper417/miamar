@@ -169,10 +169,12 @@ var FBKoModel = function(){
 	    for (var i=0; i<self.friendOptions().length;i++){
 		if(self.friendOptions()[i].name === friendObj.name) continue;
 	    }
+	    friendObj['fCorrectFriend'] = false;
 	    if(friendObj.name != self.sActualName()){
 		self.friendOptions().push(friendObj);
 	    }
 	}
+	self.oActualFriend['fCorrectFriend'] = true;
 	self.friendOptions.push(self.oActualFriend);
 	self.friendOptions.sort(function(left, right){ 
 	    return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) 
