@@ -90,7 +90,7 @@ var FBKoModel = function(){
 	self.fSeeNext(false);
 	self.fLoading(true);
 	if(self.allFriends.length){
-	     self.gatherItems();
+	    self.gatherItems();
 	}
 	else{
 	    self.collectFriends();	
@@ -169,12 +169,16 @@ var FBKoModel = function(){
 	    for (var i=0; i<self.friendOptions().length;i++){
 		if(self.friendOptions()[i].name === friendObj.name) continue;
 	    }
-	    friendObj['fCorrectFriend'] = false;
+	    friendObj['fCorrectNotSelected'] = ko.observable(false);
+	    friendObj['fIncorrectSelected'] = ko.observable(false);
+	    friendObj['fCorrectSelected'] = ko.observable(false);
 	    if(friendObj.name != self.sActualName()){
 		self.friendOptions().push(friendObj);
 	    }
 	}
-	self.oActualFriend['fCorrectFriend'] = true;
+	self.oActualFriend['fCorrectNotSelected'] = ko.observable(false);
+	self.oActualFriend['fIncorrectSelected'] = ko.observable(false);
+	self.oActualFriend['fCorrectSelected'] = ko.observable(false);
 	self.friendOptions.push(self.oActualFriend);
 	self.friendOptions.sort(function(left, right){ 
 	    return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) 
@@ -188,19 +192,22 @@ var FBKoModel = function(){
 
     self.checkName = function(data){
 	var sInputName = data.name;
-	self.fQuestionShowing(false);
-	self.fSeeNext(true);
 	if(sInputName.toLowerCase() === self.sActualName().toLowerCase()){
+	    self.oActualFriend['fCorrectSelected'](true);
 	    self.nScore(self.nScore()+1);
 	    self.fCorrect(true);
 	}
 	else{
+	    data['fIncorrectSelected'](true);
+	    self.oActualFriend['fCorrectNotSelected'](true);
 	    self.nIncorrect(self.nIncorrect()+1);
 	    self.fCorrect(false);
 	    if(self.nIncorrect() >= NUM_CHANCES){
 		self.fGameOver(true);
 	    }
-	};
+	}
+	self.fQuestionShowing(false);
+	self.fSeeNext(true);
     }
 
     // When the user presses the button to see the next question
