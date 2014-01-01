@@ -32,7 +32,7 @@ window.fbAsyncInit = function() {
     firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
 }());
 
-var FQL_FRIENDS = "SELECT name, uid FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me()) LIMIT 100";
+var FQL_FRIENDS = "SELECT name, uid FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())";
 var FQL_PICS = "SELECT id, url FROM profile_pic WHERE id IN (SELECT uid from #query1) AND width = 200 AND height = 200";
 
 var FQL_STATUS1 = "SELECT uid,message FROM status WHERE uid = ";
@@ -162,7 +162,10 @@ var FBKoModel = function(){
 	self.friendOptions.removeAll();
 	while(self.friendOptions().length < OPTIONS_LENGTH){
 	    var friendObj = self.allFriends[parseInt(Math.random() * self.allFriends.length)];
-	    if(self.friendOptions().indexOf(friendObj.name) === -1 && friendObj.name != self.sActualName()){
+	    for (var i=0; i<self.friendOptions().length;i++){
+		if(self.friendOptions()[i].name === friendObj.name) continue;
+	    }
+	    if(friendObj.name != self.sActualName()){
 		self.friendOptions().push(friendObj);
 	    }
 	}
