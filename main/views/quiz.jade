@@ -36,9 +36,8 @@ html(lang="en")
             p(class="quote", data-bind="text: sMessage")
         div(data-bind="foreach: friendOptions, visible: fQuestionShowing")
            div
-               input(name="friends",type="radio", data-bind="value:$data.name,checked:$parent.sInputName")
                span(data-bind="text:$data.name")
-               img(data-bind="attr:{src: $data.pic_square}")
+               img(data-bind="click: $parent.checkName, attr:{src: $data.pic_square}")
         button(data-bind="visible: fQuestionShowing, click: checkName") Submit
         div(data-bind="visible:fSeeNext")
             p(data-bind="visible: fCorrect") Correct!
