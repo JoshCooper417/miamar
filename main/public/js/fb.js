@@ -1,4 +1,4 @@
-var OPTIONS_LENGTH = 5;
+var OPTIONS_LENGTH = 6
 var NUM_QUESTIONS = 10;
 var NUM_CHANCES = 3;
 var FBModel;
@@ -194,22 +194,25 @@ var FBKoModel = function(){
 
     self.generateFriendOptions = function(){
 	self.friendOptions.removeAll();
-	while(self.friendOptions().length < OPTIONS_LENGTH){
-	    var friendObj = self.allFriends[parseInt(Math.random() * self.allFriends.length)];
-	    for (var i=0; i<self.friendOptions().length;i++){
-		if(self.friendOptions()[i].name === friendObj.name) continue;
-	    }
-	    friendObj['fCorrectNotSelected'] = ko.observable(false);
-	    friendObj['fIncorrectSelected'] = ko.observable(false);
-	    friendObj['fCorrectSelected'] = ko.observable(false);
-	    if(friendObj.name != self.sActualName()){
-		self.friendOptions().push(friendObj);
-	    }
-	}
 	self.oActualFriend['fCorrectNotSelected'] = ko.observable(false);
 	self.oActualFriend['fIncorrectSelected'] = ko.observable(false);
 	self.oActualFriend['fCorrectSelected'] = ko.observable(false);
 	self.friendOptions.push(self.oActualFriend);
+	while(self.friendOptions().length < OPTIONS_LENGTH){
+	    var friendObj = self.allFriends[parseInt(Math.random() * self.allFriends.length)];
+	    var fTaken = false;
+	    for (var i=0; i<self.friendOptions().length;i++){
+		if(self.friendOptions()[i].name === friendObj.name){
+		    fTaken = true;
+		    continue;
+		}
+	    }
+	    if(fTaken) continue;
+	    friendObj['fCorrectNotSelected'] = ko.observable(false);
+	    friendObj['fIncorrectSelected'] = ko.observable(false);
+	    friendObj['fCorrectSelected'] = ko.observable(false);
+	    self.friendOptions().push(friendObj);
+	}
 	self.friendOptions.sort(function(left, right){ 
 	    return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) 
 	})
