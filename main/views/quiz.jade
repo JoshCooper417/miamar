@@ -19,9 +19,8 @@ html(lang="en")
 			//wrapper
 			div(class="wrapper")
 				div(class="heading",data-bind="visible:fInit() || fLoading()")
-					span(class="titleSmall") SAYS WHO
-						span  HIGH SCORE: 
-							span(data-bind="text: nHighScore")
+					span(class="titleSmall") SAYS WHO MY HIGH SCORE: 
+						span(data-bind="text: nHighScore")
 						span(class="score") SCORE: 
 							span(data-bind="text: nScore")
 				h1(data-bind="visible:!(fInit() || fLoading())") SAYS WHO
