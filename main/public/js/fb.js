@@ -58,9 +58,9 @@ var FBKoModel = function(){
     self.nScore = ko.observable(0);
     self.nHighScore = ko.observable(-1);
     self.nIncorrect = ko.observable(0);
-    self.items = new Array();
+    self.items = [];
     self.idxCurrItem=0;
-    self.allFriends = new Array();
+    self.allFriends = [];
     self.friendOptions = ko.observableArray();
     self.friendsMap = {};
     self.numQuestions = ko.observable(NUM_QUESTIONS);
@@ -70,9 +70,9 @@ var FBKoModel = function(){
 	    self.fCheckedIfLoggedIn(true);
 	    self.fLoggedIn(response.status === 'connected');
 	});
-    }
+    };
 
-    self.FBLogin=function(){
+    self.FBLogin = function(){
 	FB.login(function(response) {
 	    if (response.authResponse) {
 		self.fLoggedIn(true);
@@ -80,7 +80,7 @@ var FBKoModel = function(){
 		console.log('User cancelled login or did not fully authorize.');
 	    }
 	}, {scope: 'email,read_stream,publish_actions'});
-    }
+    };
 
     self.getHighScore = function(){
 	FB.api("/me/scores",function (response) {
@@ -95,9 +95,9 @@ var FBKoModel = function(){
 		}
 	    }
 	);
-    }
+    };
 
-    self.startGame=function(){
+    self.startGame = function(){
 	self.idxCurrItem = 0;
 	self.nIncorrect(0);
 	self.nScore(0);
@@ -110,7 +110,7 @@ var FBKoModel = function(){
 	} else {
 	    self.initItemsAndFriends();
 	}
-    }
+    };
 
     self.initItemsAndFriends = function(){
 	if(self.allFriends.length){
@@ -118,7 +118,7 @@ var FBKoModel = function(){
 	} else {
 	    self.collectFriends();	
 	}
-    }
+    };
 
     // When the user hits 'Play Game!'
     self.collectFriends = function(){
@@ -134,7 +134,7 @@ var FBKoModel = function(){
 	    });
 	    self.gatherItems();
 	});
-    }
+    };
 
     self.gatherItems = function(){
 	var friendIDs = new Array();
@@ -149,7 +149,7 @@ var FBKoModel = function(){
 	}
 	FB.api({method: 'fql.multiquery', queries: params}, function(response){
 	    // All the underscore.js
-	    var non_empty_responses = _.filter(response,function(r){
+	    var non_empty_responses = _.filter(response, function(r){
 		return r.fql_result_set.length;
 	    });
 	    var random_entries = _.map(non_empty_responses, function(r){
@@ -168,13 +168,13 @@ var FBKoModel = function(){
 	    }
 	    self.askFirstQuestion();
 	});
-    }
+    };
 
     self.askFirstQuestion = function(){
 	self.fLoading(false);
 	self.fInit(true);
 	self.ask(self.idxCurrItem);
-    }
+    };
 
     self.ask = function(){
 	self.fCheckingName(false);
@@ -190,7 +190,7 @@ var FBKoModel = function(){
 	    self.sMessage(item.message);
 	    self.fQuestionShowing(true);
 	}
-    }
+    };
 
     self.generateFriendOptions = function(){
 	self.friendOptions.removeAll();
@@ -213,12 +213,12 @@ var FBKoModel = function(){
 	self.friendOptions.sort(function(left, right){ 
 	    return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) 
 	})
-    }
+    };
 
     self.nextQuestion = function(){
 	self.idxCurrItem++;
 	self.ask(self.idxCurrItem);
-    }
+    };
 
     self.checkName = function(data){
 	var sInputName = data.name;
@@ -244,13 +244,13 @@ var FBKoModel = function(){
 	}
 	self.fQuestionShowing(false);
 	self.fSeeNext(true);
-    }
+    };
 
     // When the user presses the button to see the next question
     self.seeNext = function(){
 	self.fSeeNext(false);
 	self.nextQuestion();
-    }
+    };
 
     self.postScore = function(){
     	var postMessage = 'I scored a '+self.nScore()+' on Says Who! Give it a try too!';
@@ -262,8 +262,8 @@ var FBKoModel = function(){
 		self.fScorePosted(true);
 	    }
 	});
-    }
-}
+    };
+};
 
 $(window).ready(function(){
     FBModel = new FBKoModel();
