@@ -37,7 +37,7 @@ var FQL_FRIENDS = "SELECT name, uid FROM user WHERE uid IN (SELECT uid2 FROM fri
 var FQL_PICS = "SELECT id, url FROM profile_pic WHERE id IN (SELECT uid from #query1) AND width = 200 AND height = 200";
 
 var FQL_STATUS1 = "SELECT uid,message FROM status WHERE uid = ";
-var FQL_STATUS2 = " LIMIT 1";
+var FQL_STATUS2 = " LIMIT 10";
 
 var FBKoModel = function(){
     var self = this;
@@ -126,16 +126,22 @@ var FBKoModel = function(){
 	    params[queryID] = query;
 	}
 	FB.api({method: 'fql.multiquery', queries: params}, function(response){
-	    var good_responses = _.filter(response,function(r){
-		if(r.fql_result_set.length){
-		    return r.fql_result_set[0].message;
-		};
-		return false;
+	    // All the underscore.js
+	    var non_empty_responses = _.filter(response,function(r){
+		return r.fql_result_set.length;
 	    });
-	    for (var i=0; i<good_responses.length; i++){
+	    var random_entries = _.map(non_empty_responses, function(r){
+		var result_set = r.fql_result_set;
+		var randomIndex = parseInt(Math.random() * result_set.length);
+		return result_set[randomIndex]; 
+	    });
+	    var good_messages = _.filter(random_entries, function(r){
+		return r.message;
+	    });
+	    for (var i=0; i<good_messages.length; i++){
 		var message_obj = {};
-		message_obj['id'] = good_responses[i].fql_result_set[0].uid;
-		message_obj['message'] = good_responses[i].fql_result_set[0].message;
+		message_obj['id'] = good_messages[i].uid;
+		message_obj['message'] = good_messages[i].message;
 		self.items[i] = message_obj;
 	    }
 	    self.askFirstQuestion();
