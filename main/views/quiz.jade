@@ -36,10 +36,6 @@ html(lang="en")
 				
 				//correct
 				div(data-bind="visible: fLoggedIn")
-					div(data-bind="visible:fSeeNext")
-						p(data-bind="visible: fCorrect") Correct!
-						p(data-bind="visible: !fCorrect()") Wrong :( The correct answer was: 
-							span(data-bind="text: sActualName")
 						button(data-bind="click:seeNext") Next
 				div(data-bind="visible: fGameOver")
 					p GAME OVER
@@ -51,6 +47,6 @@ html(lang="en")
 			
 			//footer pictures		
 			div(class="footer", data-bind="visible: fLoggedIn")
-				div(class="choices", data-bind="foreach: friendOptions, visible: fQuestionShowing")
+				div(class="choices", data-bind="foreach: friendOptions, visible: fQuestionShowing() || fSeeNext()")
 					//span(data-bind="text:$data.name")
 					img(class="profpic", data-bind="css: { 'Boring': $parent.fCheckingName() && !($data.fCorrectNotSelected()||$data.fIncorrectSelected()||$data.fCorrectSelected()), 'CorrectNotSelected': $data.fCorrectNotSelected, 'IncorrectSelected': $data.fIncorrectSelected, 'CorrectSelected': $data.fCorrectSelected }, click:$parent.checkName, attr:{src: $data.pic_square}")

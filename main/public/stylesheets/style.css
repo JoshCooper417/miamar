@@ -101,3 +101,35 @@ h2 {
 	bottom:0;
 	width:100%;
 }
+
+.correct {
+	}
+
+.CorrectNotSelected, .CorrectNotSelected:hover{
+	box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  -webkit-box-sizing:border-box;
+  border:10px solid green;
+
+}
+
+.IncorrectSelected, .IncorrectSelected:hover {
+	box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  -webkit-box-sizing:border-box;
+  border:10px solid red;
+
+}
+
+.CorrectSelected, .CorrectSelected:hover {
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	border:10px solid green;
+
+}
+
+.Boring, .Boring:hover {
+	
+
+}
