@@ -13,7 +13,7 @@ body {
 	overflow:none;
 }
 
-.quote, p {
+.quote {
 	font-size:60px;
 	color:#FFF;
 	font-family: 'Vollkorn', serif;
@@ -85,8 +85,31 @@ h2 {
 	text-align: center;
 }
 
+.imageWrapper {
+	position:relative;
+	display:inline;
+}
+
 .profpic {
 	width:16.666666667%;
+}
+
+.name {
+	position:absolute;
+	z-index: 1;
+	width:100%;
+	text-align: center;
+	
+	font-size:60px;
+	color:#FFF;
+	font-family: 'Vollkorn', serif;
+	font-weight: 400;
+	font-style: italic;
+
+	line-height: 80px;	
+	
+	background-color: rgba(0,0,0,.6);
+	bottom:0;
 }
 
 .profpic:hover{
@@ -102,15 +125,12 @@ h2 {
 	width:100%;
 }
 
-.correct {
-	}
-
 .CorrectNotSelected, .CorrectNotSelected:hover{
 	box-sizing:border-box;
   -moz-box-sizing:border-box;
   -webkit-box-sizing:border-box;
   border:10px solid green;
-
+  
 }
 
 .IncorrectSelected, .IncorrectSelected:hover {
@@ -118,7 +138,7 @@ h2 {
   -moz-box-sizing:border-box;
   -webkit-box-sizing:border-box;
   border:10px solid red;
-
+  
 }
 
 .CorrectSelected, .CorrectSelected:hover {
@@ -126,7 +146,7 @@ h2 {
 	-moz-box-sizing:border-box;
 	-webkit-box-sizing:border-box;
 	border:10px solid green;
-
+	
 }
 
 .Boring, .Boring:hover {
@@ -134,6 +154,5 @@ h2 {
 	-moz-box-sizing:border-box;
 	-webkit-box-sizing:border-box;
 	border:none;
-	visibility: hidden;
-
+	display: none;
 }
