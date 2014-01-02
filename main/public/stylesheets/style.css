@@ -8,6 +8,10 @@ body {
 	margin:0;
 }
 
+button {
+	cursor: pointer;
+}
+
 .quoteContainer {
 	height:300px;
 	overflow:none;
@@ -38,6 +42,10 @@ h2 {
 	margin-top: -80px;
 }
 
+.highScore {
+	float:right;
+}
+
 .score {
 	font-size:12px;
 	float: right;
@@ -58,6 +66,24 @@ h2 {
 }
 
 .play:hover {
+	background-color: transparent;
+	color:white;
+}
+
+.postScore {
+	display:block;
+	margin:0 auto;
+	color:#1b00ff;
+	border: none;
+	background-color: rgba(40,40,255,1);
+	color:#ff604b;
+	padding:10px 20px;
+	font-family: 'Lato', sans-serif;
+	font-weight: 900;
+	font-size: 40px;
+}
+
+.postScore:hover {
 	background-color: transparent;
 	color:white;
 }
@@ -90,8 +116,13 @@ h2 {
 	display:inline;
 }
 
+.imageWrapper:hover .name {
+	display:block;
+}
+
 .profpic {
 	width:16.666666667%;
+	cursor:pointer;
 }
 
 .name {
@@ -100,16 +131,18 @@ h2 {
 	width:100%;
 	text-align: center;
 	
-	font-size:60px;
+	font-size:30px;
 	color:#FFF;
 	font-family: 'Vollkorn', serif;
 	font-weight: 400;
 	font-style: italic;
 
-	line-height: 80px;	
+	line-height: 40px;	
 	
 	background-color: rgba(0,0,0,.6);
-	bottom:0;
+	bottom:10px;
+	display:none;
+	vertical-align:middle;
 }
 
 .profpic:hover{
@@ -130,6 +163,13 @@ h2 {
   -moz-box-sizing:border-box;
   -webkit-box-sizing:border-box;
   border:10px solid green;
+  pointer-events:none;
+  
+  position:relative;
+	bottom:200px;
+	transition:bottom .5s;
+   -webkit-transition: bottom .5s;
+   -moz-transition: bottom .5s;
   
 }
 
@@ -138,6 +178,15 @@ h2 {
   -moz-box-sizing:border-box;
   -webkit-box-sizing:border-box;
   border:10px solid red;
+  pointer-events:none;
+  cursor:default;
+  
+  position:relative;
+	bottom:200px;
+	transition:bottom .5s;
+   -webkit-transition: bottom .5s;
+   -moz-transition: bottom .5s;
+   
   
 }
 
@@ -146,6 +195,14 @@ h2 {
 	-moz-box-sizing:border-box;
 	-webkit-box-sizing:border-box;
 	border:10px solid green;
+	pointer-events:none;
+	cursor:default;
+	
+	position:relative;
+	bottom:200px;
+	transition:bottom .5s;
+   -webkit-transition: bottom .5s;
+   -moz-transition: bottom .5s;
 	
 }
 
@@ -153,6 +210,19 @@ h2 {
 	box-sizing:border-box;
 	-moz-box-sizing:border-box;
 	-webkit-box-sizing:border-box;
+	pointer-events:none;
 	border:none;
 	display: none;
+	cursor:default;
+}
+
+.nextButton {
+	position:absolute;
+	z-index:3;
+	width:100%;
+	height:100%;
+	top:0;
+	background-color:transparent;
+	border:none;
+	
 }

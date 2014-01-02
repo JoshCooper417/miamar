@@ -19,10 +19,11 @@ html(lang="en")
 			//wrapper
 			div(class="wrapper")
 				div(class="heading",data-bind="visible:fInit() || fLoading()")
-					span(class="titleSmall") SAYS WHO MY HIGH SCORE: 
-						span(data-bind="text: nHighScore")
+					span(class="titleSmall") SAYS WHO
 						span(class="score") SCORE: 
 							span(data-bind="text: nScore")
+							span(class="highScore") &nbsp;&nbsp;&nbsp;HIGH SCORE: 
+								span(data-bind="text: nHighScore")
 				h1(data-bind="visible:!(fInit() || fLoading())") SAYS WHO
 				h2(data-bind="visible:!(fInit() || fLoading())") How well do you know your friends?
 				
@@ -36,20 +37,20 @@ html(lang="en")
 						p(class="quote", data-bind="text: sMessage")
 				
 				//correct
-				div(data-bind="visible: fLoggedIn")
-						button(data-bind="click:seeNext") Next
+				button(class="nextButton", data-bind="click:seeNext, visible: fSeeNext()")
 				div(data-bind="visible: fGameOver")
-					p GAME OVER
-					p Your score was 
+					h1 GAME OVER
+					h2 Your score was: 
 						span(data-bind="text: nScore")
-					button(data-bind="click:postScore,visible:!fScorePosted()") Post your score!
-					button(data-bind="click:startGame") Play again!
+					button(class="postScore", data-bind="click:postScore,visible:!fScorePosted()") POST YOUR SCORE
+					</br>
+					button(class="play", data-bind="click:startGame") PLAY AGAIN
 				div(class="push")
 			
 			//footer pictures		
-			div(class="footer", data-bind="visible: fLoggedIn")
+			div(class="footer", data-bind="visible: fLoggedIn() && !fGameOver()")
 				div(class="choices", data-bind="foreach: friendOptions, visible: fQuestionShowing() || fSeeNext()")
 					//span(data-bind="text:$data.name")
 					div(class="imageWrapper")
 						img(class="profpic", data-bind="css: { 'Boring': $parent.fCheckingName() && !($data.fCorrectNotSelected()||$data.fIncorrectSelected()||$data.fCorrectSelected()), 'CorrectNotSelected': $data.fCorrectNotSelected, 'IncorrectSelected': $data.fIncorrectSelected, 'CorrectSelected': $data.fCorrectSelected }, click:$parent.checkName, attr:{src: $data.pic_square}")
-						span(class="name") Hello
+						span(class="name", data-bind="text:$data.name")
