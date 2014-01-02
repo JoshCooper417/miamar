@@ -253,7 +253,7 @@ var FBKoModel = function(){
     }
 
     self.postScore = function(){
-    	var postMessage = 'I scored a '+self.nScore()+'! Give it a try too!';
+    	var postMessage = 'I scored a '+self.nScore()+' on Says Who! Give it a try too!';
 	var params = {message: postMessage};
 	FB.api("me/feed", 'post', params, function(response) {
 	    if (!response || response.error){
