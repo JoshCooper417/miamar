@@ -50,6 +50,7 @@ var FBKoModel = function(){
     self.fGameOver = ko.observable(false);
     self.fInit = ko.observable(false);
     self.fScorePosted = ko.observable(false);
+    self.fCheckingName = ko.observable(false);
 
     self.sMessage = ko.observable();
     self.oActualFriend;
@@ -148,6 +149,7 @@ var FBKoModel = function(){
     }
 
     self.ask = function(){
+	self.fCheckingName(false);
 	if(self.idxCurrItem == self.items.length){
 	    self.idxCurrItem = 0;
 	    self.fLoading(true);
@@ -192,6 +194,7 @@ var FBKoModel = function(){
 
     self.checkName = function(data){
 	var sInputName = data.name;
+	self.fCheckingName(true);
 	if(sInputName.toLowerCase() === self.sActualName().toLowerCase()){
 	    self.oActualFriend['fCorrectSelected'](true);
 	    self.nScore(self.nScore()+1);
