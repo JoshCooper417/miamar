@@ -56,6 +56,7 @@ var FBKoModel = function(){
     self.oActualFriend;
     self.sActualName = ko.observable();
     self.nScore = ko.observable(0);
+    self.nHighScore = ko.observable(-1);
     self.nIncorrect = ko.observable(0);
     self.items = new Array();
     self.idxCurrItem=0;
@@ -81,6 +82,20 @@ var FBKoModel = function(){
 	}, {scope: 'email,read_stream,publish_actions'});
     }
 
+    self.getHighScore = function(){
+	FB.api("/me/scores",function (response) {
+		if (response && !response.error) {
+		    if(response.data.length){
+			self.nHighScore(response.data[0].score);
+		    }
+		    else{
+			self.nHighScore(0);
+		    }
+		    self.initItemsAndFriends();
+		}
+	    }
+	);
+    }
 
     self.startGame=function(){
 	self.idxCurrItem = 0;
@@ -90,10 +105,17 @@ var FBKoModel = function(){
 	self.fGameOver(false);
 	self.fSeeNext(false);
 	self.fLoading(true);
+	if(self.nHighScore() == -1){
+	    self.getHighScore();
+	} else {
+	    self.initItemsAndFriends();
+	}
+    }
+
+    self.initItemsAndFriends = function(){
 	if(self.allFriends.length){
 	    self.gatherItems();
-	}
-	else{
+	} else {
 	    self.collectFriends();	
 	}
     }
@@ -205,14 +227,19 @@ var FBKoModel = function(){
 	    self.oActualFriend['fCorrectSelected'](true);
 	    self.nScore(self.nScore()+1);
 	    self.fCorrect(true);
-	}
-	else{
+	} else {
 	    data['fIncorrectSelected'](true);
 	    self.oActualFriend['fCorrectNotSelected'](true);
 	    self.nIncorrect(self.nIncorrect()+1);
 	    self.fCorrect(false);
 	    if(self.nIncorrect() >= NUM_CHANCES){
 		self.fGameOver(true);
+		if(self.nScore() > self.nHighScore()){
+		    self.nHighScore(self.nScore());
+		    FB.api("/me/scores","POST",{"score": self.nScore()}, function(response){
+			console.log(response);
+		    });
+		}
 	    }
 	}
 	self.fQuestionShowing(false);
@@ -231,8 +258,7 @@ var FBKoModel = function(){
 	FB.api("me/feed", 'post', params, function(response) {
 	    if (!response || response.error){
 		console.log(response.error.message);
-	    }
-	    else{
+	    } else {
 		self.fScorePosted(true);
 	    }
 	});
