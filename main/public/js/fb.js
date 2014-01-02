@@ -73,14 +73,18 @@ var FBKoModel = function(){
 	});
     };
 
-    self.FBLogin = function(){
-	FB.login(function(response) {
+    self.normalLogin = function(response) {
 	    if (response.authResponse) {
 		self.fLoggedIn(true);
 	    } else {
 		console.log('User cancelled login or did not fully authorize.');
 	    }
-	}, {scope: 'email,read_stream,publish_actions'});
+    };
+
+    self.FBLogin = function(publish){
+	var params = publish ? {scope: 'read_stream,publish_actions'} : {scope: 'read_stream'};
+	var callBack = publish ? self.sendPost : self.normalLogin;
+	FB.login(callBack, params);
     };
 
     self.getHighScore = function(){
@@ -258,6 +262,10 @@ var FBKoModel = function(){
     };
 
     self.postScore = function(){
+	self.FBLogin(true);
+    };
+
+    self.sendPost = function(){
     	var postMessage = 'I scored a '+self.nScore()+' on Says Who! Give it a try too!';
 	var params = {message: postMessage};
 	FB.api("me/feed", 'post', params, function(response) {

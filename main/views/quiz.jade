@@ -28,7 +28,7 @@ html(lang="en")
 				h1(data-bind="visible:!(fInit() || fLoading())") SAYS WHO
 				h2(data-bind="visible:!(fInit() || fLoading())") How well do you know your friends?
 				
-				img(class="login",src="images/fbconnect.png" data-bind="click:FBLogin, visible: !fLoggedIn() && fCheckedIfLoggedIn()")
+				img(class="login",src="images/fbconnect.png" data-bind="click:function(data, event) {FBLogin(false)}, visible: !fLoggedIn() && fCheckedIfLoggedIn()")
 				
 				p(class="quote", data-bind="visible: fLoading") loading...
 
