@@ -173,6 +173,7 @@ h2 {
 	transition:bottom .5s;
    -webkit-transition: bottom .5s;
    -moz-transition: bottom .5s;
+   pointer-events:none;
 }
 
 .IncorrectSelected, .IncorrectSelected:hover {
@@ -182,6 +183,7 @@ h2 {
    -webkit-transition: bottom .5s;
    -moz-transition: bottom .5s;
    cursor:default;
+   pointer-events:none;
 }
 
 .CorrectSelected, .CorrectSelected:hover {
@@ -190,6 +192,7 @@ h2 {
 	transition:bottom .5s;
    -webkit-transition: bottom .5s;
    -moz-transition: bottom .5s;
+   pointer-events:none;
 }
 
 .Boring, .Boring:hover {
@@ -199,6 +202,7 @@ h2 {
 	border:none;
 	display: none;
 	cursor:default;
+	pointer-events:none;
 	
 }
 
@@ -224,6 +228,7 @@ h2 {
   -webkit-box-sizing:border-box;
   border:10px solid red;
   cursor:default;
+  
 }
 
 .nextButton {

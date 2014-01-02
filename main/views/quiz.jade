@@ -38,7 +38,7 @@ html(lang="en")
 						p(class="quote", data-bind="text: sMessage")
 				
 				//correct
-				button(class="play", data-bind="click:seeNext, visible: fSeeNext()") NEXT
+				button(class="play", data-bind="click:seeNext, visible: fSeeNext() && !fGameOver()") NEXT
 				div(data-bind="visible: fGameOver")
 					h1 GAME OVER
 					h2 Your score was: 
