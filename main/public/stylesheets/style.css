@@ -117,6 +117,10 @@ h2 {
 	display:inline;
 }
 
+.imageWrapper:hover {
+	
+}
+
 .imageWrapper:hover .name {
 	display:block;
 }
@@ -124,6 +128,13 @@ h2 {
 .profpic {
 	width:16.666666667%;
 	cursor:pointer;
+}
+
+.profpic:hover {
+	box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  -webkit-box-sizing:border-box;
+  border:10px solid white;
 }
 
 .name {
@@ -147,10 +158,7 @@ h2 {
 }
 
 .profpic:hover{
-  box-sizing:border-box;
-  -moz-box-sizing:border-box;
-  -webkit-box-sizing:border-box;
-  border:10px solid white;
+  
 }
     
 .footer, .push {
@@ -160,61 +168,62 @@ h2 {
 }
 
 .CorrectNotSelected, .CorrectNotSelected:hover{
-	box-sizing:border-box;
-  -moz-box-sizing:border-box;
-  -webkit-box-sizing:border-box;
-  border:10px solid green;
-  pointer-events:none;
-  
-  position:relative;
+	 position:relative;
 	bottom:200px;
 	transition:bottom .5s;
    -webkit-transition: bottom .5s;
    -moz-transition: bottom .5s;
-  
 }
 
 .IncorrectSelected, .IncorrectSelected:hover {
-	box-sizing:border-box;
-  -moz-box-sizing:border-box;
-  -webkit-box-sizing:border-box;
-  border:10px solid red;
-  pointer-events:none;
-  cursor:default;
-  
   position:relative;
-	bottom:200px;
+  bottom:200px;
 	transition:bottom .5s;
    -webkit-transition: bottom .5s;
    -moz-transition: bottom .5s;
-   
-  
+   cursor:default;
 }
 
 .CorrectSelected, .CorrectSelected:hover {
-	box-sizing:border-box;
-	-moz-box-sizing:border-box;
-	-webkit-box-sizing:border-box;
-	border:10px solid green;
-	pointer-events:none;
-	cursor:default;
-	
 	position:relative;
 	bottom:200px;
 	transition:bottom .5s;
    -webkit-transition: bottom .5s;
    -moz-transition: bottom .5s;
-	
 }
 
 .Boring, .Boring:hover {
 	box-sizing:border-box;
 	-moz-box-sizing:border-box;
 	-webkit-box-sizing:border-box;
-	pointer-events:none;
 	border:none;
 	display: none;
 	cursor:default;
+	
+}
+
+.CorrectSelected .profpic, .CorrectSelected .profpic:hover {
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	border:10px solid green;
+	cursor:default;
+}
+
+.CorrectNotSelected .profpic, .CorrectNotSelected .profpic:hover {
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	border:10px solid green;
+	cursor:default;
+}
+
+.IncorrectSelected .profpic, .IncorrectSelected .profpic:hover {
+	box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  -webkit-box-sizing:border-box;
+  border:10px solid red;
+  cursor:default;
 }
 
 .nextButton {
