@@ -2,6 +2,7 @@ var OPTIONS_LENGTH = 6;
 var NUM_QUESTIONS = 10;
 var NUM_CHANCES = 3;
 var FBModel;
+var URL = 'http://localhost:5000';
 
 window.fbAsyncInit = function() {
     // init the FB JS SDK
@@ -39,6 +40,13 @@ var FQL_PICS = "SELECT id, url FROM profile_pic WHERE id IN (SELECT uid from #qu
 var FQL_STATUS1 = "SELECT uid,message FROM status WHERE uid = ";
 var FQL_STATUS2 = " LIMIT 10";
 
+var LeaderBoardKoModel = function(){
+    self.leaders = ko,observableArray();
+    
+
+}
+
+
 var FBKoModel = function(){
     var self = this;
     self.fLoading = ko.observable(false);
@@ -74,11 +82,11 @@ var FBKoModel = function(){
     };
 
     self.normalLogin = function(response) {
-	    if (response.authResponse) {
-		self.fLoggedIn(true);
-	    } else {
-		console.log('User cancelled login or did not fully authorize.');
-	    }
+	if (response.authResponse) {
+	    self.fLoggedIn(true);
+	} else {
+	    console.log('User cancelled login or did not fully authorize.');
+	}
     };
 
     self.FBLogin = function(publish){
@@ -89,18 +97,18 @@ var FBKoModel = function(){
 
     self.getHighScore = function(){
 	FB.api("/me/scores",function (response) {
-		if (response && !response.error) {
-		    self.fHighScoreInitialized(true);
-		    if(response.data.length){
-			self.nHighScore(response.data[0].score);
-		    }
-		    else{
-			self.nHighScore(0);
-		    }
-		    self.initItemsAndFriends();
+	    if (response && !response.error) {
+		self.fHighScoreInitialized(true);
+		if(response.data.length){
+		    self.nHighScore(response.data[0].score);
 		}
+		else{
+		    self.nHighScore(0);
+		}
+		self.initItemsAndFriends();
 	    }
-	);
+	}
+	      );
     };
 
     self.startGame = function(){
@@ -266,19 +274,27 @@ var FBKoModel = function(){
     };
 
     self.sendPost = function(){
-    	var postMessage = 'I scored a '+self.nScore()+' on Says Who! Give it a try too!';
-	var params = {message: postMessage};
-	FB.api("me/feed", 'post', params, function(response) {
-	    if (!response || response.error){
-		console.log(response.error.message);
-	    } else {
-		self.fScorePosted(true);
-	    }
-	});
+	var postMessage = 'I scored a '+self.nScore()+' on Says Who! Give it a try too!';
+	var obj = {
+	    method: 'feed',
+	    link: URL,
+	    picture: 'http://en.hdyo.org/assets/ask-question-2-ce96e3e01c85a38a0d39c61cfae6d42c.jpg',
+	    name: 'Says Who',
+	    caption: 'Who well do you know your friends?',
+	    description: postMessage
+	};
+	FB.ui(obj, function(r){console.log(r);});
     };
+
 };
 
 $(window).ready(function(){
-    FBModel = new FBKoModel();
-    ko.applyBindings(FBModel, $('#binder')[0]);
+    if($('#binder').length){
+	FBModel = new FBKoModel();
+	ko.applyBindings(FBModel, $('#binder')[0]);
+    } else if($('#leaderBoard').length){
+	FBModel = new LeaderBoardKoModel();
+	ko.applyBindings(FBModel, $('#leaderBoard')[0]);
+    }
+
 });
