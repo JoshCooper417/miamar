@@ -98,7 +98,7 @@ h2 {
     
 .footer, .push {
 	position:fixed;
-	bottom:0;
+	bottom:-4px;
 	width:100%;
 }
 
@@ -130,6 +130,10 @@ h2 {
 }
 
 .Boring, .Boring:hover {
-	
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	border:none;
+	visibility: hidden;
 
 }
