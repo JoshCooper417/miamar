@@ -1,4 +1,4 @@
-var OPTIONS_LENGTH = 6
+var OPTIONS_LENGTH = 6;
 var NUM_QUESTIONS = 10;
 var NUM_CHANCES = 3;
 var FBModel;
@@ -56,7 +56,8 @@ var FBKoModel = function(){
     self.oActualFriend;
     self.sActualName = ko.observable();
     self.nScore = ko.observable(0);
-    self.nHighScore = ko.observable(-1);
+    self.nHighScore = ko.observable(0);
+    self.fHighScoreInitialized = ko.observable(false);
     self.nIncorrect = ko.observable(0);
     self.items = [];
     self.idxCurrItem=0;
@@ -85,6 +86,7 @@ var FBKoModel = function(){
     self.getHighScore = function(){
 	FB.api("/me/scores",function (response) {
 		if (response && !response.error) {
+		    self.fHighScoreInitialized(true);
 		    if(response.data.length){
 			self.nHighScore(response.data[0].score);
 		    }
@@ -105,7 +107,7 @@ var FBKoModel = function(){
 	self.fGameOver(false);
 	self.fSeeNext(false);
 	self.fLoading(true);
-	if(self.nHighScore() == -1){
+	if(!self.fHighScoreInitialized()){
 	    self.getHighScore();
 	} else {
 	    self.initItemsAndFriends();

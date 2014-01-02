@@ -11,7 +11,7 @@ html(lang="en")
 		link(href='http://fonts.googleapis.com/css?family=Vollkorn:400italic,700italic,400,700',rel='stylesheet',type='text/css')
 
 	body
-		noscript Sorry, you need JavaScript for this to work (i.e., this is not made for mobile).
+		noscript Sorry, you need JavaScript for this to work.
 		|<div id="fb-root"></div>
 		script(src='/js/fb.js')
 
@@ -23,7 +23,8 @@ html(lang="en")
 						span(class="score") SCORE: 
 							span(data-bind="text: nScore")
 							span(class="highScore") &nbsp;&nbsp;&nbsp;HIGH SCORE: 
-								span(data-bind="text: nHighScore")
+								span(data-bind="visible: !fHighScoreInitialized()") ... 
+								span(data-bind="visible: fHighScoreInitialized, text: nHighScore")
 				h1(data-bind="visible:!(fInit() || fLoading())") SAYS WHO
 				h2(data-bind="visible:!(fInit() || fLoading())") How well do you know your friends?
 				
