@@ -92,6 +92,7 @@ h2 {
 	display:block;
 	margin:0 auto;
 	width:200px;
+	cursor:pointer;
 }
 
 .heading {
