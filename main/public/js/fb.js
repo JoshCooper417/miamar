@@ -3,7 +3,6 @@ var NUM_QUESTIONS = 10;
 var NUM_CHANCES = 3;
 var FBModel;
 var LeaderModel;
-var URL = 'http://localhost:5000';
 var APP_ID = 543510825740884
 
 window.fbAsyncInit = function() {
@@ -79,7 +78,7 @@ var LeaderBoardKoModel = function(){
 	});
     };
     self.returnToGame = function(){
-	window.location.href=URL;
+	window.location.href='/';
     }
 };
 
@@ -96,6 +95,7 @@ var FBKoModel = function(){
     self.fInit = ko.observable(false);
     self.fScorePosted = ko.observable(false);
     self.fCheckingName = ko.observable(false);
+    self.fHighScoreChanged = ko.observable(false);
 
     self.sMessage = ko.observable();
     self.oActualFriend;
@@ -154,6 +154,7 @@ var FBKoModel = function(){
 	self.idxCurrItem = 0;
 	self.nIncorrect(0);
 	self.nScore(0);
+	self.fHighScoreChanged(false);
 	self.fScorePosted(false);
 	self.fGameOver(false);
 	self.fSeeNext(false);
@@ -283,6 +284,10 @@ var FBKoModel = function(){
 	    self.oActualFriend['fCorrectSelected'](true);
 	    self.nScore(self.nScore()+1);
 	    self.fCorrect(true);
+	    if(self.nScore()>self.nHighScore()){
+		self.fHighScoreChanged(true);
+		self.nHighScore(self.nScore());
+	    }
 	} else {
 	    data['fIncorrectSelected'](true);
 	    self.oActualFriend['fCorrectNotSelected'](true);
@@ -290,9 +295,7 @@ var FBKoModel = function(){
 	    self.fCorrect(false);
 	    if(self.nIncorrect() >= NUM_CHANCES){
 		self.fGameOver(true);
-		debugger;
-		if(self.nScore() > self.nHighScore()){
-		    self.nHighScore(self.nScore());
+		if(self.fHighScoreChanged()){
 		    FB.api("/me/scores","POST",{"score": self.nScore()}, function(response){
 			console.log(response);
 		    });
@@ -318,7 +321,7 @@ var FBKoModel = function(){
 	var postMessage = 'I scored a '+self.nScore()+' on Says Who! Give it a try too!';
 	var obj = {
 	    method: 'feed',
-	    link: URL,
+	    link: document.URL,
 	    picture: 'http://en.hdyo.org/assets/ask-question-2-ce96e3e01c85a38a0d39c61cfae6d42c.jpg',
 	    name: 'Says Who',
 	    caption: 'Who well do you know your friends?',
