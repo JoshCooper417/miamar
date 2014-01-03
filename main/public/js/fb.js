@@ -2,17 +2,19 @@ var OPTIONS_LENGTH = 6;
 var NUM_QUESTIONS = 10;
 var NUM_CHANCES = 3;
 var FBModel;
+var LeaderModel;
 var URL = 'http://localhost:5000';
+var APP_ID = 543510825740884
 
 window.fbAsyncInit = function() {
     // init the FB JS SDK
     FB.init({
-	appId      : '543510825740884',                    // App ID from the app dashboard
+	appId      : ''+APP_ID,                    // App ID from the app dashboard
 	status     : true,                                 // Check Facebook Login status
 	xfbml      : true                                  // Look for social plugins on the page
     });
 
-    FBModel.checkIfLoggedIn();
+    FBModel.checkIfLoggedIn(LeaderModel.initialize);
 };
 
 // Load the SDK asynchronously
@@ -36,14 +38,45 @@ window.fbAsyncInit = function() {
 
 var FQL_FRIENDS = "SELECT name, uid FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())";
 var FQL_PICS = "SELECT id, url FROM profile_pic WHERE id IN (SELECT uid from #query1) AND width = 200 AND height = 200";
+var FQL_PICS_SCORE = "SELECT id, url FROM profile_pic WHERE width = 200 AND height = 200 AND id=";
 
 var FQL_STATUS1 = "SELECT uid,message FROM status WHERE uid = ";
 var FQL_STATUS2 = " LIMIT 10";
 
 var LeaderBoardKoModel = function(){
-    self.leaders = ko,observableArray();
-    
-
+    var self = this;
+    self.leaders = ko.observableArray();
+    self.fLoading = ko.observable(true);
+    self.users = {};
+    self.initialize = function(){
+	console.log('print');
+	//var query_params = {query0: FQL_FRIENDS, query1: FQL_SCORES, query2: FQL_PICS_SCORE};
+	FB.api("/"+APP_ID+"/scores",function(response){
+	    var users = response.data;
+	    users.sort(function(a,b){
+		return b.score - a.score;
+	    });
+	    var numToShow = Math.min(users.length, 10);
+	    var query_params = {};
+	    for(var i=0;i<numToShow;i++){
+		debugger;
+		var user = users[i].user;
+		var id = user.id;
+		query_params["query"+i]=FQL_PICS_SCORE+id;
+		var friend_obj = {'name' : user.name, 'score' : users[i].score};
+		self.users[id] = friend_obj;
+	    }
+	    FB.api({method: 'fql.multiquery', queries: query_params}, function(friends) {
+		_.each(friends,function(r){
+		    var friend  = r.fql_result_set[0];
+		    var friend_obj = self.users[friend.id];
+		    friend_obj['pic_square'] = friend.url;
+		    self.leaders.push(friend_obj);
+		});
+		self.fLoading(false);
+	    });
+	});
+    };
 }
 
 
@@ -74,11 +107,13 @@ var FBKoModel = function(){
     self.friendsMap = {};
     self.numQuestions = ko.observable(NUM_QUESTIONS);
 
-    self.checkIfLoggedIn = function(){
-	FB.getLoginStatus(function(response) {
+    self.checkIfLoggedIn = function(callback){
+	var default_func = function(response) {
 	    self.fCheckedIfLoggedIn(true);
 	    self.fLoggedIn(response.status === 'connected');
-	});
+	};
+	var cback = callback ? callback : default_func;
+	FB.getLoginStatus(cback);
     };
 
     self.normalLogin = function(response) {
@@ -270,6 +305,7 @@ var FBKoModel = function(){
     };
 
     self.postScore = function(){
+	// Will make a call 
 	self.FBLogin(true);
     };
 
@@ -289,12 +325,11 @@ var FBKoModel = function(){
 };
 
 $(window).ready(function(){
+    FBModel = new FBKoModel();
     if($('#binder').length){
-	FBModel = new FBKoModel();
 	ko.applyBindings(FBModel, $('#binder')[0]);
     } else if($('#leaderBoard').length){
-	FBModel = new LeaderBoardKoModel();
-	ko.applyBindings(FBModel, $('#leaderBoard')[0]);
+	LeaderModel = new LeaderBoardKoModel();
+	ko.applyBindings(LeaderModel, $('#leaderBoard')[0]);
     }
-
 });
