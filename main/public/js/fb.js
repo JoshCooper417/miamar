@@ -51,7 +51,7 @@ var LeaderBoardKoModel = function(){
     self.initialize = function(){
 	console.log('print');
 	//var query_params = {query0: FQL_FRIENDS, query1: FQL_SCORES, query2: FQL_PICS_SCORE};
-	FB.api("/"+APP_ID+"/scores",function(response){
+	FB.api("/"+APP_ID+"/scores", function(response){
 	    var users = response.data;
 	    users.sort(function(a,b){
 		return b.score - a.score;
@@ -279,6 +279,7 @@ var FBKoModel = function(){
 
     self.checkName = function(data){
 	var sInputName = data.name;
+	if(self.fCheckingName()) return;
 	self.fCheckingName(true);
 	if(sInputName.toLowerCase() === self.sActualName().toLowerCase()){
 	    self.oActualFriend['fCorrectSelected'](true);
