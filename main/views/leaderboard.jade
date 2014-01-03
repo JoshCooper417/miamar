@@ -16,8 +16,9 @@ html(lang="en")
 		script(src='/js/fb.js')
 
 		div#leaderBoard
-			p(data-bind="visible:fLoading") loading...
-			div(data-bind=",visible:!fLoading(),foreach: leaders")
+			button(class="postScore",data-bind="click:returnToGame,visible:!fLoading()") RETURN TO GAME
+			p(class="quote", data-bind="visible: fLoading") loading...
+			div(data-bind="visible:!fLoading(),foreach: leaders")
 				p
 					span(data-bind="text:$data.name")
 					span &nbsphas a high score of 

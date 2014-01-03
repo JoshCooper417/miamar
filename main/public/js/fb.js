@@ -78,7 +78,10 @@ var LeaderBoardKoModel = function(){
 	    });
 	});
     };
-}
+    self.returnToGame = function(){
+	window.location.href=URL;
+    }
+};
 
 
 var FBKoModel = function(){
