@@ -313,16 +313,17 @@ var FBKoModel = function(){
     };
 
     self.postScore = function(){
-	// Will make a call 
+	// Function will make a call 
 	self.FBLogin(true);
     };
 
     self.sendPost = function(){
 	var postMessage = 'I scored a '+self.nScore()+' on Says Who! Give it a try too!';
+	console.log(document.URL+'images/lane.png');
 	var obj = {
 	    method: 'feed',
 	    link: document.URL,
-	    picture: 'http://en.hdyo.org/assets/ask-question-2-ce96e3e01c85a38a0d39c61cfae6d42c.jpg',
+	    picture: document.URL+'images/lane.png',
 	    name: 'Says Who',
 	    caption: 'Who well do you know your friends?',
 	    description: postMessage
