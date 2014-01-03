@@ -120,7 +120,6 @@ h2 {
 	
 	position:relative;
 	bottom:100px;
-	z-index:4;
 	
 }
 
@@ -215,7 +214,6 @@ h2 {
    -webkit-transition: bottom .5s;
    -moz-transition: bottom .5s;
    pointer-events:none;
-   z-index:-1;
 }
 
 .IncorrectSelected{
@@ -226,7 +224,6 @@ h2 {
    -moz-transition: bottom .5s;
    cursor:default;
    pointer-events:none;
-   z-index:-1;
 }
 
 .CorrectSelected{
@@ -236,7 +233,6 @@ h2 {
    -webkit-transition: bottom .5s;
    -moz-transition: bottom .5s;
    pointer-events:none;
-   z-index:-1;
 }
 
 .Boring, .Boring:hover {
