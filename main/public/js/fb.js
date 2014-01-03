@@ -287,6 +287,7 @@ var FBKoModel = function(){
 	    self.fCorrect(false);
 	    if(self.nIncorrect() >= NUM_CHANCES){
 		self.fGameOver(true);
+		debugger;
 		if(self.nScore() > self.nHighScore()){
 		    self.nHighScore(self.nScore());
 		    FB.api("/me/scores","POST",{"score": self.nScore()}, function(response){
@@ -321,6 +322,10 @@ var FBKoModel = function(){
 	    description: postMessage
 	};
 	FB.ui(obj, function(r){console.log(r);});
+    };
+
+    self.leaderBoard = function(){
+	window.location.href="/leaderboard";
     };
 
 };

@@ -18,7 +18,9 @@ html(lang="en")
 		div#leaderBoard
 			p(data-bind="visible:fLoading") loading...
 			div(data-bind=",visible:!fLoading(),foreach: leaders")
-				p(data-bind="text:$data.name")
-				p(data-bind="text:$data.score")
+				p
+					span(data-bind="text:$data.name")
+					span &nbsphas a high score of 
+					span(data-bind="text:$data.score")
 				img(data-bind="attr:{src: $data.pic_square}")
 
