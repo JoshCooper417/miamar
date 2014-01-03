@@ -212,6 +212,8 @@ h2 {
 	-webkit-box-sizing:border-box;
 	border:10px solid green;
 	cursor:default;
+	
+	pointer-events:auto;
 }
 
 .CorrectNotSelected .profpic, .CorrectNotSelected .profpic:hover {
@@ -220,6 +222,7 @@ h2 {
 	-webkit-box-sizing:border-box;
 	border:10px solid green;
 	cursor:default;
+	pointer-events:auto;
 }
 
 .IncorrectSelected .profpic, .IncorrectSelected .profpic:hover {
@@ -228,6 +231,7 @@ h2 {
   -webkit-box-sizing:border-box;
   border:10px solid red;
   cursor:default;
+  pointer-events:auto;
   
 }
 
