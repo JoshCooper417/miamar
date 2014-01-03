@@ -14,7 +14,8 @@ window.fbAsyncInit = function() {
 	xfbml      : true                                  // Look for social plugins on the page
     });
 
-    FBModel.checkIfLoggedIn(LeaderModel.initialize);
+    if(LeaderModel) FBModel.checkIfLoggedIn(LeaderModel.initialize);
+    else FBModel.checkIfLoggedIn();
 };
 
 // Load the SDK asynchronously
