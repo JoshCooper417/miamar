@@ -167,7 +167,7 @@ h2 {
 	width:100%;
 }
 
-.CorrectNotSelected, .CorrectNotSelected:hover{
+.CorrectNotSelected{
 	 position:relative;
 	bottom:200px;
 	transition:bottom .5s;
@@ -176,7 +176,7 @@ h2 {
    pointer-events:none;
 }
 
-.IncorrectSelected, .IncorrectSelected:hover {
+.IncorrectSelected{
   position:relative;
   bottom:200px;
 	transition:bottom .5s;
@@ -186,7 +186,7 @@ h2 {
    pointer-events:none;
 }
 
-.CorrectSelected, .CorrectSelected:hover {
+.CorrectSelected{
 	position:relative;
 	bottom:200px;
 	transition:bottom .5s;
@@ -203,35 +203,34 @@ h2 {
 	display: none;
 	cursor:default;
 	pointer-events:none;
-	
 }
 
-.CorrectSelected .profpic, .CorrectSelected .profpic:hover {
+.CorrectSelected .profpic{
 	box-sizing:border-box;
 	-moz-box-sizing:border-box;
 	-webkit-box-sizing:border-box;
 	border:10px solid green;
 	cursor:default;
 	
-	pointer-events:auto;
+	pointer-events:all;
 }
 
-.CorrectNotSelected .profpic, .CorrectNotSelected .profpic:hover {
+.CorrectNotSelected .profpic{
 	box-sizing:border-box;
 	-moz-box-sizing:border-box;
 	-webkit-box-sizing:border-box;
 	border:10px solid green;
 	cursor:default;
-	pointer-events:auto;
+	pointer-events:all;
 }
 
-.IncorrectSelected .profpic, .IncorrectSelected .profpic:hover {
+.IncorrectSelected .profpic{
 	box-sizing:border-box;
   -moz-box-sizing:border-box;
   -webkit-box-sizing:border-box;
   border:10px solid red;
   cursor:default;
-  pointer-events:auto;
+  pointer-events:all;
   
 }
 
