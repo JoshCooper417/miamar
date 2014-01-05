@@ -52,7 +52,8 @@ var LeaderBoardKoModel = function(){
 	console.log('print');
 	//var query_params = {query0: FQL_FRIENDS, query1: FQL_SCORES, query2: FQL_PICS_SCORE};
 	FB.api("/"+APP_ID+"/scores", function(response){
-	    var users = response.data;
+	    var users_all = response.data;
+	    var users = _.filter(users_all,function(user){return user.score;});
 	    users.sort(function(a,b){
 		return b.score - a.score;
 	    });
@@ -146,8 +147,7 @@ var FBKoModel = function(){
 		}
 		self.initItemsAndFriends();
 	    }
-	}
-	      );
+	});
     };
 
     self.startGame = function(){
