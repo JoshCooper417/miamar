@@ -1,6 +1,6 @@
 var OPTIONS_LENGTH = 6;
 var NUM_QUESTIONS = 10;
-var NUM_CHANCES = 3;
+var NUM_CHANCES = 1;
 var FBModel;
 var LeaderModel;
 var APP_ID = 543510825740884
@@ -13,8 +13,8 @@ window.fbAsyncInit = function() {
 	xfbml      : true                                  // Look for social plugins on the page
     });
 
-    if(LeaderModel) FBModel.checkIfLoggedIn(LeaderModel.initialize);
-    else FBModel.checkIfLoggedIn();
+    FBModel.checkIfLoggedIn(LeaderModel.initialize);
+    FBModel.checkIfLoggedIn();
 };
 
 // Load the SDK asynchronously
@@ -333,17 +333,20 @@ var FBKoModel = function(){
     };
 
     self.leaderBoard = function(){
-	window.location.href="/leaderboard";
+	self.showDialog('#dialog');
+    };
+
+    self.showDialog = function(id){
+	$(id).dialog({
+	    modal: true
+	}).dialog('open');
     };
 
 };
 
 $(window).ready(function(){
     FBModel = new FBKoModel();
-    if($('#binder').length){
-	ko.applyBindings(FBModel, $('#binder')[0]);
-    } else if($('#leaderBoard').length){
-	LeaderModel = new LeaderBoardKoModel();
-	ko.applyBindings(LeaderModel, $('#leaderBoard')[0]);
-    }
+    LeaderModel = new LeaderBoardKoModel();
+    ko.applyBindings(FBModel, $('#binder')[0]);
+    ko.applyBindings(LeaderModel, $('#leaderBinder')[0]);
 });
