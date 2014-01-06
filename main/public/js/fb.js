@@ -45,6 +45,7 @@ var FQL_STATUS2 = " LIMIT 10";
 
 var LeaderBoardKoModel = function(){
     var self = this;
+    self.fShowLeaderBoard = ko.observable(false);
     self.leaders = ko.observableArray();
     self.fLoading = ko.observable(true);
     self.users = {};
@@ -75,9 +76,10 @@ var LeaderBoardKoModel = function(){
 	    });
 	});
     };
-    self.returnToGame = function(){
-	window.location.href='/';
+    self.closeLeaderBoard = function(){
+	self.fShowLeaderBoard(false);
     }
+    
 };
 
 
@@ -311,7 +313,7 @@ var FBKoModel = function(){
     };
 
     self.postScore = function(){
-	// Function will make a call 
+	// This function will make a call 
 	self.FBLogin(true);
     };
 
@@ -329,15 +331,8 @@ var FBKoModel = function(){
     };
 
     self.leaderBoard = function(){
-	self.showDialog('#dialog');
+	LeaderModel.fShowLeaderBoard(true);
     };
-
-    self.showDialog = function(id){
-	$(id).dialog({
-	    modal: true
-	}).dialog('open');
-    };
-
 };
 
 $(window).ready(function(){

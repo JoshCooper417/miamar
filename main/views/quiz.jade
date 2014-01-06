@@ -59,7 +59,8 @@ html(lang="en")
 						span(class="name", data-bind="text:$data.name")
 				button(class="nextButton", data-bind="click:seeNext, visible: fSeeNext() && !fGameOver()") NEXT
 		div#leaderBinder(title="Pin it!")
-			div#dialog(style="display: none")
+			div#leaderBoard(data-bind="visible: fShowLeaderBoard")
+				button(data-bind="click:closeLeaderBoard") CLOSE
 				p(class="quote", data-bind="visible: fLoading") loading...
 				div(data-bind="visible:!fLoading(),foreach: leaders")
 					p
