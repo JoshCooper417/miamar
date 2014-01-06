@@ -1,0 +1,27 @@
+doctype html
+html(lang="en")
+	head
+		title= pageTitle
+		script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js')
+		script(src='//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js')
+		script(src='http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js')
+		script(src='http://documentcloud.github.com/underscore/underscore-min.js')
+		link(rel='stylesheet', href='/stylesheets/style.css')
+		link(href='http://fonts.googleapis.com/css?family=Lato:100,900',rel='stylesheet',type='text/css')
+		link(href='http://fonts.googleapis.com/css?family=Vollkorn:400italic,700italic,400,700',rel='stylesheet',type='text/css')
+
+	body
+		noscript Sorry, you need JavaScript for this to work.
+		|<div id="fb-root"></div>
+		script(src='/js/fb.js')
+
+		div#leaderBoard
+			button(class="postScore",data-bind="click:returnToGame,visible:!fLoading()") RETURN TO GAME
+			p(class="quote", data-bind="visible: fLoading") loading...
+			div(data-bind="visible:!fLoading(),foreach: leaders")
+				p
+					span(data-bind="text:$data.name")
+					span &nbsphas a high score of 
+					span(data-bind="text:$data.score")
+				img(data-bind="attr:{src: $data.pic_square}")
+

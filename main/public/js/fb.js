@@ -49,8 +49,6 @@ var LeaderBoardKoModel = function(){
     self.fLoading = ko.observable(true);
     self.users = {};
     self.initialize = function(){
-	console.log('print');
-	//var query_params = {query0: FQL_FRIENDS, query1: FQL_SCORES, query2: FQL_PICS_SCORE};
 	FB.api("/"+APP_ID+"/scores", function(response){
 	    var users_all = response.data;
 	    var users = _.filter(users_all,function(user){return user.score;});
@@ -60,7 +58,6 @@ var LeaderBoardKoModel = function(){
 	    var numToShow = Math.min(users.length, 10);
 	    var query_params = {};
 	    for(var i=0;i<numToShow;i++){
-		debugger;
 		var user = users[i].user;
 		var id = user.id;
 		query_params["query"+i]=FQL_PICS_SCORE+id;
@@ -320,7 +317,6 @@ var FBKoModel = function(){
 
     self.sendPost = function(){
 	var postMessage = 'I scored a '+self.nScore()+' on Says Who! Give it a try too!';
-	console.log(document.URL+'images/lane.png');
 	var obj = {
 	    method: 'feed',
 	    link: document.URL,
