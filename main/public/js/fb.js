@@ -191,7 +191,7 @@ var FBKoModel = function(){
 
     self.gatherItems = function(){
 	var friendIDs = new Array();
-	for (var i=0; i<OPTIONS_LENGTH;i++){
+	for (var i=0; i<OPTIONS_LENGTH; i++){
 	    friendIDs[i] = self.allFriends[parseInt(Math.random() * self.allFriends.length)].uid;
 	}
 	var params = {};
@@ -267,7 +267,7 @@ var FBKoModel = function(){
 	    self.friendOptions().push(friendObj);
 	}
 	self.friendOptions.sort(function(left, right){ 
-	    return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1) 
+	    return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1);
 	})
     };
 
@@ -324,7 +324,7 @@ var FBKoModel = function(){
 	    link: document.URL,
 	    picture: document.URL+'images/lane.png',
 	    name: 'Says Who',
-	    caption: 'Who well do you know your friends?',
+	    caption: 'How well do you know your friends?',
 	    description: postMessage
 	};
 	FB.ui(obj, function(r){console.log(r);});
