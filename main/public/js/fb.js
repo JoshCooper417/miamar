@@ -213,12 +213,12 @@ var FBKoModel = function(){
 	    var good_messages = _.filter(random_entries, function(r){
 		return r.message;
 	    });
-	    for (var i=0; i<good_messages.length; i++){
+	    _.each(good_messages, function(message){
 		var message_obj = {};
-		message_obj['id'] = good_messages[i].uid;
-		message_obj['message'] = good_messages[i].message;
-		self.items[i] = message_obj;
-	    }
+		message_obj['id'] = message.uid;
+		message_obj['message'] =message.message;
+		self.items.push(message_obj);
+	    });
 	    self.askFirstQuestion();
 	});
     };
