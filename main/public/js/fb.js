@@ -105,7 +105,7 @@ var FBKoModel = function(){
     self.fHighScoreInitialized = ko.observable(false);
     self.nIncorrect = ko.observable(0);
     self.items = [];
-    self.idxCurrItem=0;
+    self.idxCurrItem = 0;
     self.allFriends = [];
     self.friendOptions = ko.observableArray();
     self.friendsMap = {};
@@ -189,6 +189,7 @@ var FBKoModel = function(){
     };
 
     self.gatherItems = function(){
+	self.items = [];
 	var friendIDs = new Array();
 	for (var i=0; i<OPTIONS_LENGTH; i++){
 	    friendIDs[i] = self.allFriends[parseInt(Math.random() * self.allFriends.length)].uid;
@@ -229,8 +230,10 @@ var FBKoModel = function(){
     };
 
     self.ask = function(){
+	console.log(self.idxCurrItem);
 	self.fCheckingName(false);
 	if(self.idxCurrItem == self.items.length){
+	    console.log('Resetting idxItem because self.idxCurrItem was '+self.idxCurrItem);
 	    self.idxCurrItem = 0;
 	    self.fLoading(true);
 	    self.gatherItems();
