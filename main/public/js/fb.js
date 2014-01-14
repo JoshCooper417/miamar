@@ -1,6 +1,6 @@
-var OPTIONS_LENGTH = 6;
+var OPTIONS_LENGTH = 4;
 var NUM_QUESTIONS = 10;
-var NUM_CHANCES = 1;
+var NUM_CHANCES = 3;
 var FBModel;
 var LeaderModel;
 var APP_ID = 543510825740884
@@ -41,7 +41,7 @@ var FQL_PICS = "SELECT id, url FROM profile_pic WHERE id IN (SELECT uid from #qu
 var FQL_PICS_SCORE = "SELECT id, url FROM profile_pic WHERE width = 200 AND height = 200 AND id=";
 
 var FQL_STATUS1 = "SELECT uid,message FROM status WHERE uid = ";
-var FQL_STATUS2 = " LIMIT 10";
+var FQL_STATUS2 = " LIMIT " + NUM_QUESTIONS;
 
 var LeaderBoardKoModel = function(){
     var self = this;
@@ -109,7 +109,6 @@ var FBKoModel = function(){
     self.allFriends = [];
     self.friendOptions = ko.observableArray();
     self.friendsMap = {};
-    self.numQuestions = ko.observable(NUM_QUESTIONS);
 
     self.checkIfLoggedIn = function(callback){
 	var default_func = function(response) {
