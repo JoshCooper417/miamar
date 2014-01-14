@@ -58,14 +58,20 @@ html(lang="en")
 						img(class="profpic", data-bind="attr:{src: $data.pic_square}")
 						span(class="name", data-bind="text:$data.name")
 				button(class="nextButton", data-bind="click:seeNext, visible: fSeeNext() && !fGameOver()") NEXT
-		div#leaderBinder
-			div#leaderBoard(data-bind="visible: fShowLeaderBoard")
-				button(data-bind="click:closeLeaderBoard") CLOSE
+		div#leaderBinder(class="leaderboardContainer", data-bind="visible: fShowLeaderBoard")
+			</br>
+			</br>
+			div#leaderBoard(class="leaderboardDiv")
+				button(class="xButton", data-bind="click:closeLeaderBoard") X
 				p(class="quote", data-bind="visible: fLoading") loading...
+				</br>
+				</br>
 				div(data-bind="visible:!fLoading(),foreach: leaders")
-					p
-						span(data-bind="text:$data.name")
-						span &nbsphas a high score of 
-						span(data-bind="text:$data.score")
-					img(data-bind="attr:{src: $data.pic_square}")
+					div(class="leaderWrapper")
+						span(class="leaderscore", data-bind="text:$data.score")
+						img(class="leaderpic", data-bind="attr:{src: $data.pic_square}")
+						span(class="leadername", data-bind="text:$data.name")
+					</br>
+				</br>
+
 
