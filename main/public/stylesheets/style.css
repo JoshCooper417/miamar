@@ -370,3 +370,6 @@ h2 {
 	background-color: rgba(0,0,0,.6);
 	vertical-align:middle;
 }
+.textgap {
+	min-height: 200px;
+}
