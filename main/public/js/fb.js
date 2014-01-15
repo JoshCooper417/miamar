@@ -4,6 +4,7 @@ var NUM_CHANCES = 3;
 var FBModel;
 var LeaderModel;
 var APP_ID = 543510825740884
+var IMAGE_NAME = 'images/icon.png';
 
 window.fbAsyncInit = function() {
     // init the FB JS SDK
@@ -324,7 +325,7 @@ var FBKoModel = function(){
 	var obj = {
 	    method: 'feed',
 	    link: document.URL,
-	    picture: document.URL+'images/lane.png',
+	    picture: document.URL+IMAGE_NAME,
 	    name: 'Says Who',
 	    caption: 'How well do you know your friends?',
 	    description: postMessage
