@@ -231,10 +231,8 @@ var FBKoModel = function(){
     };
 
     self.ask = function(){
-	console.log(self.idxCurrItem);
 	self.fCheckingName(false);
 	if(self.idxCurrItem == self.items.length){
-	    console.log('Resetting idxItem because self.idxCurrItem was '+self.idxCurrItem);
 	    self.idxCurrItem = 0;
 	    self.fLoading(true);
 	    self.gatherItems();
