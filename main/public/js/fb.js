@@ -319,7 +319,7 @@ var FBKoModel = function(){
     };
 
     self.sendPost = function(){
-	var postMessage = 'I scored a '+self.nScore()+' on Says Who! Give it a try too!';
+	var postMessage = 'I scored '+self.nScore()+' on Says Who! Give it a try too!';
 	var obj = {
 	    method: 'feed',
 	    link: document.URL,
