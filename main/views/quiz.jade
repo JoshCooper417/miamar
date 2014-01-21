@@ -73,7 +73,7 @@ html(lang="en")
 			
 			//footer pictures		
 			div(class="footer", data-bind="visible: fLoggedIn() ")
-				div(class="choices", data-bind="foreach: friendOptions, visible: fQuestionShowing() || fSeeNext()")
+				div(class="choices", data-bind="foreach: friendOptions, visible: fQuestionShowing() || fSeeNext() && !fGameOver()")
 					//span(data-bind="text:$data.name")
 					div(class="imageWrapper", data-bind="css: { 'Boring': $parent.fCheckingName() && !($data.fCorrectNotSelected()||$data.fIncorrectSelected()||$data.fCorrectSelected()), 'CorrectNotSelected': $data.fCorrectNotSelected, 'IncorrectSelected': $data.fIncorrectSelected, 'CorrectSelected': $data.fCorrectSelected },click:$parent.checkName")
 						img(class="profpic", data-bind="attr:{src: $data.pic_square}")
