@@ -16,6 +16,8 @@ window.fbAsyncInit = function() {
 
     FBModel.checkIfLoggedIn(LeaderModel.initialize);
     FBModel.checkIfLoggedIn();
+    // Jquery hack to make sure the Google Analytics script is the last one
+    $('style').last().insertAfter($('link').last());
 };
 
 // Load the SDK asynchronously
