@@ -109,10 +109,7 @@ h2 {
 	text-align:center;
 	width:100%;
 	z-index: 5;
-	background-color: rgba(255,255,255,.5);
-	
-	height:100%;
-	
+	background-color: rgba(255,255,255,.5);	
 }
 
 .leaderboardDiv {
